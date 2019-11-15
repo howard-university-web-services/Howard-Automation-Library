@@ -1,0 +1,11 @@
+{
+    "name": "howard/howard_automation_library",
+    "description": "This repo holds bash scripts and other files to help in the automation of Howard University Drupal projects.",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Dan Rogers",
+            "email": "dan.rogers@idfive.com"
+        }
+    ]
+}

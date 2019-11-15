@@ -9,8 +9,10 @@ Clone this repo into your ~/Sites folder, as "_hal"
  - `$ cd ~/Sites`
  - `$ git clone https://https://github.com/howard-university-web-services/Howard-Automation-Library.git _hal`
 
-### Add Local Config
+### Add and configure acquia CLI
 
+ - `git clone https://github.com/typhonius/acquia_cli.git`
+ - See [documentation](https://github.com/typhonius/acquia_cli) on adding API keys/etc locally.
  - Ensure Acquia CLI is installed and running correctly.
  
 ### Requirements
