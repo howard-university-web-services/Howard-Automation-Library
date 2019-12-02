@@ -88,7 +88,10 @@ git add .
 git commit -m 'Adding $HR_NAME ($SITE_NAME), via Howard Automation Library'
 git push origin master --force
 
-# Acquia notes:
+# Acquia notes, to be finalized/tested:
+# drush ac-api-login --email=dan.rogers@idfive.com --key=a55e882d-00bc-4764-b750-9cefd7446738 --endpoint=https://cloudapi.acquia.com/v1
+# look at api v1 vs v2 look at drush commands, they seem to be about EOL
+
 # drush @hud8.dev --uri=dev.coasdept.howard.edu sql-dump --result-file= > hal_coasdept_dump.sql
 # drush @academicdepartments.dev --uri=dev.$SITE_NAME sql-drop
 # drush @academicdepartments.dev --uri=dev.$SITE_NAME sql-cli < hal_coasdept_dump.sql
