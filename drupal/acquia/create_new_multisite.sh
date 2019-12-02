@@ -96,6 +96,6 @@ git push origin master --force
 # drush @academicdepartments.dev --uri=dev.$SITE_NAME sql-drop
 # drush @academicdepartments.dev --uri=dev.$SITE_NAME sql-cli < hal_coasdept_dump.sql
 # rm hal_coasdept_dump.sql
-# drush @academicdepartments.dev --uri=dev.coas.howard.edu config:set system.site name "${HR_NAME}"
+# NOT YET WORKING drush @academicdepartments.dev --uri=dev.coas.howard.edu cset system.site name "${HR_NAME}"
 # scp -3 -r hud8.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.dev/sites/coasdept.howard.edu/files academicdepartments.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/academicdepartments.dev/sites/$SITE_NAME
 # drush @academicdepartments.dev --uri=dev.$SITE_NAME cr
