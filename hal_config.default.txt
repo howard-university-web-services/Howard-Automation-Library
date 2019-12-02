@@ -1,0 +1,2 @@
+ACQUIA_API_EMAIL="the_email_address_of_your_acquia_account"
+ACQUIA_API_KEY="your_api_key_from_acquia"
