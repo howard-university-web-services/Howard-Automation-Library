@@ -3,19 +3,17 @@
 # This script creates a new multisite install locally, adjusts settings.php and sites.php with needed parameters,
 # create a new multisite DB on acquia, clone the dev.coasdept.howard.edu DB and Files into it.
 #
-# $ sh ~/Sites/_ial/drupal/pantheon/create_new_pantheon_site.sh
-#
 # Notes:
 # - Be sure hal_config.txt is set up and working
 # - Refresh all drush aliases via dev desktop or similar
 # - Be sure you are on master branch, and that the env in question has DEV ENV set to MASTER.
-# - Be ure you run from ~/Sites/devdesktop/DESIRED_CODEBASE/docroot/sites
+# - Be sure you run from ~/Sites/devdesktop/DESIRED_CODEBASE/docroot/sites
 #
 # Dependencies:
 # - Drush: https://www.drush.org/
 # - Acquia CLI: https://github.com/typhonius/acquia_cli
 #
-# Paramaters:
+# Parameters:
 # - HR Name | 'Example Site' | 'Example School'
 # - Site Name | 'example.howard.edu' | 'school.howard.edu'
 # - Database Name | 'example' | 'school'
@@ -28,7 +26,7 @@ echo "Be sure you are on the correct branch to deploy to DEV env."
 
 source ~/Sites/_hal/hal_config.txt
 
-# Database Name, use as $DATABASE_NAME
+# Human Readable Name, use as $HR_NAME
 echo "Enter the Human Readable Name. The Human Readable name of the site (e.g. Example Site):"
 read HR_NAME
 
@@ -76,7 +74,7 @@ sed -i '' '3i\'$'\n'" \ \ \ \ 'stg.${SITE_NAME}' => '${SITE_NAME}',"$'\\\n' site
 sed -i '' '3i\'$'\n'" \ \ \ \ '${SITE_NAME}' => '${SITE_NAME}',"$'\\\n' sites.php
 
 # Move to new sites folder
-cd $site_name
+cd $SITE_NAME
 
 # Reconfigure settings.php
 echo "Reconfiguring settings.php..."
