@@ -1,2 +1,2 @@
 #updates the Howard Paragraph Modules
-composer update hp_paragraphs
+composer update 'howard/howard_paragraphs'
