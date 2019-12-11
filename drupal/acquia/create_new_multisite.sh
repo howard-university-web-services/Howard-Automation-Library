@@ -89,14 +89,14 @@ git commit -m 'Adding $HR_NAME ($SITE_NAME), via Howard Automation Library'
 git push origin master --force
 
 # Acquia notes, to be finalized/tested:
-# drush ac-api-login --email=dan.rogers@idfive.com --key=a55e882d-00bc-4764-b750-9cefd7446738 --endpoint=https://cloudapi.acquia.com/v1
+# drush ac-api-login --email=$ACQUIA_API_EMAIL --key=$ACQUIA_API_KEY --endpoint=https://cloudapi.acquia.com/v1
 # look at api v1 vs v2 look at drush commands, they seem to be about EOL
 # ~/Sites/_hal/acquia_cli/bin/acquiacli list
 
-# drush @hud8.dev --uri=dev.coasdept.howard.edu sql-dump --result-file= > hal_coasdept_dump.sql
-# drush @academicdepartments.dev --uri=dev.$SITE_NAME sql-drop
-# drush @academicdepartments.dev --uri=dev.$SITE_NAME sql-cli < hal_coasdept_dump.sql
-# rm hal_coasdept_dump.sql
+drush @hud8.dev --uri=dev.coasdept.howard.edu sql-dump --result-file= > hal_coasdept_dump.sql
+drush @academicdepartments.dev --uri=dev.$SITE_NAME sql-drop
+drush @academicdepartments.dev --uri=dev.$SITE_NAME sql-cli < hal_coasdept_dump.sql
+rm hal_coasdept_dump.sql
 # NOT YET WORKING drush @academicdepartments.dev --uri=dev.coas.howard.edu cset system.site name "${HR_NAME}"
-# scp -3 -r hud8.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.dev/sites/coasdept.howard.edu/files academicdepartments.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/academicdepartments.dev/sites/$SITE_NAME
-# drush @academicdepartments.dev --uri=dev.$SITE_NAME cr
+scp -3 -r hud8.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.dev/sites/coasdept.howard.edu/files academicdepartments.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/academicdepartments.dev/sites/$SITE_NAME
+drush @academicdepartments.dev --uri=dev.$SITE_NAME cr
