@@ -10,6 +10,7 @@
 # - Refresh all drush aliases via dev desktop or similar
 # - Be sure you are on master branch, and that the env in question has DEV ENV set to MASTER.
 # - Be ure you run from ~/Sites/devdesktop/DESIRED_CODEBASE/docroot/sites
+# - Be ure you have created a database on the desired acquia install, and that you have the machine name handy.
 #
 # Dependencies:
 # - Drush: https://www.drush.org/
