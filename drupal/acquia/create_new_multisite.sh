@@ -29,11 +29,11 @@ echo "Be sure you are on the correct branch to deploy to DEV env."
 
 source ~/Sites/_hal/hal_config.txt
 
-# Database Name, use as $DATABASE_NAME
+# Human Readable Name, use as $DATABASE_NAME
 echo "Enter the Human Readable Name. The Human Readable name of the site (e.g. Example Site):"
 read HR_NAME
 
-# Check database name is not empty
+# Check Human Readable name is not empty
 if [ -z "$HR_NAME" ]; then
   echo "The HR name cannot be empty!"
   exit 2
