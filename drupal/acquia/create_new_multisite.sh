@@ -3,7 +3,7 @@
 # This script creates a new multisite install locally, adjusts settings.php and sites.php with needed parameters,
 # create a new multisite DB on acquia, clone the dev.coasdept.howard.edu DB and Files into it.
 #
-# $ sh ~/Sites/_ial/drupal/pantheon/create_new_pantheon_site.sh
+# $ sh ~/Sites/_hal/drupal/acquia/create_new_multisite.sh
 #
 # Notes:
 # - Be sure hal_config.txt is set up and working
