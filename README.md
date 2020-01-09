@@ -62,3 +62,17 @@ The following scripts are available:
 - Be sure that all desired local folders are set up in hal_config.txt
 - You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
 - `$ sh ~/Sites/_hal/drupal/acquia/update_howard_packages.sh`
+
+## Roadmap
+
+### All Howard D8 acquia codebases
+
+- Run composer update on all local codebases hot howard packages. "update the Howard pages on all local D8 codebases" **DONE**
+- Run composer add on all local codebases. "add the seckit module on all local D8 codebases" **In Progress**
+- Commit and push to DEV for all local codebases
+- Run drush updb for all sites, prefixed by dev/stg/prod. Basically: "run updb on all dev sites" or "run updb on all prod sites"
+- Deploy to prod for all codebases
+
+### Single Howard D8 acquia codebases
+
+Add new site to this multisite. "Add new site 'x.howard.edu'", could clone starter sites folder, make changes to settings.php, add new db to acquia, clone starter DB and import to new db, set up settings.php, sites.php, et all for new site, commit, and push to acquia. **In Progress**
