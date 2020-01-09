@@ -67,7 +67,7 @@ The following scripts are available:
 
 ### All Howard D8 acquia codebases
 
-- Run composer update on all local codebases hot howard packages. "update the Howard pages on all local D8 codebases" **DONE**
+- Run composer update on all local codebases for howard packages. "update the Howard pages on all local D8 codebases" **DONE**
 - Run composer add on all local codebases. "add the seckit module on all local D8 codebases" **In Progress**
 - Commit and push to DEV for all local codebases
 - Run drush updb for all sites, prefixed by dev/stg/prod. Basically: "run updb on all dev sites" or "run updb on all prod sites"
