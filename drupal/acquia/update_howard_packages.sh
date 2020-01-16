@@ -22,6 +22,7 @@ echo "Be sure you are on the correct branch to deploy to DEV env in all folders/
 echo "You will be committing and pushing code. Be sure this is really what you want to do."
 
 source ~/Sites/_hal/hal_config.txt
+composer clearcache
 
 for app in ${LOCAL_HOWARD_D8_FOLDERS[@]}; do
   echo "Running update in $app"
