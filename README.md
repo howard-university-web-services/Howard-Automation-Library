@@ -15,6 +15,7 @@ Clone this repo into your ~/Sites folder, as "_hal"
 - `$ cp hal_config.default.txt hal_config.txt`
 - Edit hal_config.txt to use your acquia credentials.
 - Edit hal_config.txt to use the absolute path to any local Howard D8 repos you wish to update/use.
+- Edit hal_config.txt to use the local drush aliases you have.
 
 #### Finding your local Howard D8 folders
 
@@ -25,6 +26,11 @@ Clone this repo into your ~/Sites folder, as "_hal"
 - `cd hud8-dev`
 - `pwd`: The out put of this would go into hal_config.txt as `LOCAL_HOWARD_D8_FOLDERS[0]="/PATH/TO/YOUR/FOLDER/hud8-dev"` (NOTICE THE "0" HERE).
 - Subsequent paths, Academic Departments,for additional Howard D8 environments you wish to update would go into hal_config.txt as `LOCAL_HOWARD_D8_FOLDERS[1]="/PATH/TO/YOUR/OTHER/FOLDER/academicdepartments-dev"` (NOTICE THE "1" HERE).
+
+#### Finding your local drush aliases
+
+- Run `drush sa` for a list of current drush aliases.
+- You should see `@cl.prod_academicdepartments.dev.dev` and `@cl.prod_hud8.dev.dev`, with others for stg and prod installs of each. Thesw would be added as `@cl.prod_academicdepartments`, leaving off the env connotation, as we set that in a choice per script, so that you may choose in the script which env to run them on.
 
 ### Add and configure acquia CLI
 
@@ -63,6 +69,13 @@ The following scripts are available:
 - Be sure that all desired local folders are set up in hal_config.txt
 - You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
 - `$ sh ~/Sites/_hal/drupal/acquia/update_howard_packages.sh`
+
+#### Update the twitter API key on all sites
+
+- Be sure that all desired local drush aliases are set up in hal_config.txt
+- You may set twitter credentials in hal_config.txt and simply hit enter through the prompts, or paste them in as the prompts arise.
+- You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
+- `$ sh ~/Sites/_hal/drupal/acquia/update_twitter_api_key.sh`
 
 ## Roadmap
 

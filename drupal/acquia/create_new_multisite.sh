@@ -40,7 +40,7 @@ select ACQUIA_ENV in "${TO_ACQUIA_ENVS[@]}"; do
   fi
 done
 
-# Human Readable Name, use as $DATABASE_NAME
+# Human Readable Name, use as $HR_NAME
 echo "Enter the Human Readable Name. The Human Readable name of the site (e.g. Example Site):"
 read HR_NAME
 
