@@ -15,47 +15,40 @@
 # - Acquia CLI: https://github.com/typhonius/acquia_cli
 #
 # Paramaters:
-# - Branch_Name  | 'Branch Name'
+# - BRANCH_NAME  | 'Branch Name'
 
 
 
 echo "This script will add, commit and push all selected branches to acquia."
 echo "Please Enter the  Branch name"
-read Branch_Name
+read BRANCH_NAME
 
 # Stores the output of git commands in string variables
-ref_check=$( git show-ref  --verify -- refs/heads/$Branch_Name 2>&1 )
+ref_check=$( git show-ref --verify refs/heads/$BRANCH_NAME 2>&1 )
 set_upstream_check=$( git push 2>&1 )
 
-# Check Desired Branch is not empty
-if [ -z "$Branch_Name" ]
+# Checks  Desired Branch is not empty
+if [ -z "$BRANCH_NAME" ]
 then
     echo "The desired branch name cannot be empty!"
 elif [[ $ref_check == *"fatal:"* ]]
 then
-    echo "$Branch_Name is not a valid branch"
+    echo "$BRANCH_NAME is not a valid branch"
 else
     echo "Checking the working tree's status..."
     #Determine if Working tree is clean.
-    if test -z "$( git status --porcelain )"
+    if test -z "$( git status )"
     then
         echo "Working tree is clean"
-        exit 2;
     else
         echo "Adding files to index ... "
-        git add .
-        git commit -m "Pushing current woking changes to Dev enviroment."
+        git add -A
+        git commit -m "Pushing current working changes"
         if [[ $set_upstream_check == *"--set-upstream"*  ]]
         then
-            git push --set-upstream origin $Branch_Name
+            git push --set-upstream origin $BRANCH_NAME
         else
             git push
         fi
-        exit 2;
     fi
 fi
-
-
-
-
-
