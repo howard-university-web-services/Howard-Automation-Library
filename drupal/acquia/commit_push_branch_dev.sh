@@ -37,7 +37,7 @@ then
 else
     echo "Checking the working tree's status..."
     #Determine if Working tree is clean.
-    if test -z "$( git status )"
+    if test -z "$( git status  --porcelain )"
     then
         echo "Working tree is clean"
     else
