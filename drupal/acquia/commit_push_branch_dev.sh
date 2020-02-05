@@ -47,7 +47,7 @@ else
         git commit -m "Pushing current woking changes to Dev enviroment."
         if [[ $set_upstream_check == *"--set-upstream"*  ]]
         then
-            git push --set-upstrem origin $Branch_Name
+            git push --set-upstream origin $Branch_Name
         else
             git push
         fi
