@@ -20,7 +20,7 @@
 # - Acquia Env | The environment to create the site on
 # - HR Name | 'Example Site' | 'Example School'
 # - Site Name | 'example.howard.edu' | 'school.howard.edu'
-# - Database Name | 'example' | 'school'
+# - Database Name | 'example' | The machine name of the DB added to acquia
 # - Acquia API Email | 'your.email@howard.edu' | read from hal_config.txt
 # - Acquia API Key | 'xxxxxxxxxxxxxxxxxxxxxxxx' | read from hal_config.txt
 #
@@ -61,7 +61,7 @@ if [ -z "$SITE_NAME" ]; then
 fi
 
 # Database Name, use as $DATABASE_NAME
-echo "Enter the Database Name. The name of the database that will be created on acquia (e.g. example):"
+echo "Enter the Database Name. The name of the database that was created on acquia (e.g. example_howard):"
 read DATABASE_NAME
 
 # Check database name is not empty
@@ -110,13 +110,8 @@ find . -type f -exec sed -i '' -e "s/DATABASENAME/${DATABASE_NAME}/g" {} \;
 echo "commiting to git, and pushing..."
 cd ../
 git add .
-git commit -m 'Adding ${HR_NAME} (${SITE_NAME}), via Howard Automation Library'
-git push origin master --force
-
-# Acquia notes, to be finalized/tested:
-# drush ac-api-login --email=$ACQUIA_API_EMAIL --key=$ACQUIA_API_KEY --endpoint=https://cloudapi.acquia.com/v1
-# look at api v1 vs v2 look at drush commands, they seem to be about EOL
-# ~/Sites/_hal/acquia_cli/bin/acquiacli list
+git commit -m 'Adding new multisite, via Howard Automation Library'
+git push origin master
 
 # Clone database
 echo "cloning database..."
@@ -124,8 +119,6 @@ drush @hud8.dev --uri=dev.coasdept.howard.edu sql-dump --result-file= > hal_coas
 drush $ACQUIA_ENV --uri=dev.$SITE_NAME sql-drop
 drush $ACQUIA_ENV --uri=dev.$SITE_NAME sql-cli < hal_coasdept_dump.sql
 rm hal_coasdept_dump.sql
-
-# NOT YET WORKING drush @academicdepartments.dev --uri=dev.coas.howard.edu cset system.site name "${HR_NAME}"
 
 # Copy Files
 echo "copying files..."
