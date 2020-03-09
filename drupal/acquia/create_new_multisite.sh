@@ -14,15 +14,12 @@
 #
 # Dependencies:
 # - Drush: https://www.drush.org/
-# - Acquia CLI: https://github.com/typhonius/acquia_cli
 #
 # Paramaters:
 # - Acquia Env | The environment to create the site on
 # - HR Name | 'Example Site' | 'Example School'
 # - Site Name | 'example.howard.edu' | 'school.howard.edu'
 # - Database Name | 'example' | The machine name of the DB added to acquia
-# - Acquia API Email | 'your.email@howard.edu' | read from hal_config.txt
-# - Acquia API Key | 'xxxxxxxxxxxxxxxxxxxxxxxx' | read from hal_config.txt
 #
 
 echo "This script will create the local sites folder, commit and push to acquia."
