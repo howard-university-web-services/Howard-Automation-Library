@@ -31,7 +31,7 @@ for app in ${LOCAL_HOWARD_D8_FOLDERS[@]}; do
   echo "commiting to git, and pushing..."
   git add .
   git commit -m 'Updating all Howard Packagist themes and modules, via Howard Automation Library'
-  git push origin master --force
+  git push origin master
 done
 
 exit 0
