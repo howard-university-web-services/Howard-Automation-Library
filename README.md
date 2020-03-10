@@ -13,7 +13,6 @@ Clone this repo into your ~/Sites folder, as "_hal"
 
 - `$ cd ~/Sites/_hal`
 - `$ cp hal_config.default.txt hal_config.txt`
-- Edit hal_config.txt to use your acquia credentials.
 - Edit hal_config.txt to use the absolute path to any local Howard D8 repos you wish to update/use.
 - Edit hal_config.txt to use the local drush aliases you have.
 
@@ -32,18 +31,11 @@ Clone this repo into your ~/Sites folder, as "_hal"
 - Run `drush sa` for a list of current drush aliases.
 - You should see `@cl.prod_academicdepartments.dev.dev` and `@cl.prod_hud8.dev.dev`, with others for stg and prod installs of each. Thesw would be added as `@cl.prod_academicdepartments`, leaving off the env connotation, as we set that in a choice per script, so that you may choose in the script which env to run them on.
 
-### Add and configure acquia CLI
-
-- `git clone https://github.com/typhonius/acquia_cli.git`
-- See [documentation](https://github.com/typhonius/acquia_cli) on adding API keys/etc locally.
-- Ensure Acquia CLI is installed and running correctly.
-
 ### Requirements
 
 Be sure the following are up and running correctly on your local machine:
 
 - [Acquia DevDesktop](https://www.acquia.com/drupal/acquia-dev-desktop)
-- [Acquia CLI](https://github.com/typhonius/acquia_cli)
 - [Drush](https://docs.drush.org/en/master/install/) -- Already present if using DevDesktop
 
 ## Usage

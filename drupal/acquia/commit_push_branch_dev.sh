@@ -12,7 +12,6 @@
 #
 # Dependencies:
 # - Drush: https://www.drush.org/
-# - Acquia CLI: https://github.com/typhonius/acquia_cli
 #
 # Paramaters:
 # - BRANCH_NAME  | 'Branch Name'

@@ -1,5 +1,3 @@
-ACQUIA_API_EMAIL="the_email_address_of_your_acquia_account"
-ACQUIA_API_KEY="your_api_key_from_acquia"
 LOCAL_HOWARD_D8_FOLDERS[0]="/Users/YOUR_USER/Sites/devdesktop/hud8-dev"
 LOCAL_HOWARD_D8_FOLDERS[1]="/Users/YOUR_USER/Sites/devdesktop/academicdepartments-dev"
 LOCAL_HOWARD_D8_DRUSH_ALIAS[0]="@cl.prod_hud8"
