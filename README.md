@@ -52,9 +52,18 @@ The following scripts are available:
 
 #### Initial spinup of a multi-site site, and clone dev.coasdept
 
-- This script creates a new multi-site install locally, adjusts settings.php and sites.php with needed parameters, create a new multi-site DB on acquia, clone the dev.coasdept.howard.edu DB and Files into it.
+- This script creates a new multi-site install locally, adjusts settings.php and sites.php with needed parameters, connect to a multi-site DB on acquia, clone the dev.coasdept.howard.edu DB and Files into it.
+
+##### Manual Steps (to be completed first)
+
+- Create database in desired environment (hud8 or academicdepartments), and note machine name.
+- Add URLs for new site into dev/stg/live URL fields in acquia.
+
+##### Automated Steps (done by script after manual steps complete)
+
 - Be sure that all desired local folders are set up in hal_config.txt
 - Be sure that you are on master branch, and it is up to date.
+- Be sure you have the database machine name you added in acquia.
 - You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
 - `$ sh ~/Sites/_hal/drupal/acquia/create_new_multisite.sh`
 
@@ -70,6 +79,13 @@ The following scripts are available:
 - You may set twitter credentials in hal_config.txt and simply hit enter through the prompts, or paste them in as the prompts arise.
 - You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
 - `$ sh ~/Sites/_hal/drupal/acquia/update_twitter_api_key.sh`
+
+#### Update database on all acquia D8 sites
+
+- Be sure that all desired local drush aliases are set up in hal_config.txt
+- You may choose either hud8 or academicdepartments. The script then runs drush updb on all multi-sites on dev, stg, and prod.
+- You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
+- `$ sh ~/Sites/_hal/drupal/acquia/update_db_on_acquia.sh`
 
 ## Roadmap
 
