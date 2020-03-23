@@ -38,21 +38,28 @@ Be sure the following are up and running correctly on your local machine:
 - [Acquia DevDesktop](https://www.acquia.com/drupal/acquia-dev-desktop)
 - [Drush](https://docs.drush.org/en/master/install/) -- Already present if using DevDesktop
 
+## Updating HAL
+
+Use git to keep this library up date on your local machine.
+
+- `cd ~/Sites/_hal`
+- `git pull`
+
 ## Usage
 
-- Ensure you are in the proper folder, especially for partials
+- Ensure you are in the proper folder, if the script requires it, especially for partials
 - `$ sh your_desired_script.sh`
 - Do not use sudo
 
 ## Drupal 8
 
-The following scripts are available:
+The following full scripts are available:
 
 ### Acquia
 
-#### Initial spinup of a multi-site site, and clone dev.coasdept
+#### Initial spin-up of a multi-site site, and clone dev.coasdept
 
-- This script creates a new multi-site install locally, adjusts settings.php and sites.php with needed parameters, connect to a multi-site DB on acquia, clone the dev.coasdept.howard.edu DB and Files into it.
+- This script creates a new multi-site install locally (copies the _starter_ folder), adjusts settings.php and sites.php with needed parameters, adds connection data to a multi-site DB on acquia, Commits to master, and pushes to Acquia. The script then clones the dev.coasdept.howard.edu DB and Files into it, directly on acquia DEV.
 
 ##### Manual Steps (to be completed first)
 
@@ -61,7 +68,8 @@ The following scripts are available:
 
 ##### Automated Steps (done by script after manual steps complete)
 
-- Be sure that all desired local folders are set up in hal_config.txt
+- Be sure that HAL is up to date.
+- Be sure that all desired local folders, and drush aliases are set up in hal_config.txt.
 - Be sure that you are on master branch, and it is up to date.
 - Be sure you have the database machine name you added in acquia.
 - You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
@@ -69,20 +77,26 @@ The following scripts are available:
 
 #### Update all Howard packagist repos, on all Howard D8 sites, commit, and push to acquia
 
-- Be sure that all desired local folders are set up in hal_config.txt
+- Be sure that HAL is up to date.
+- Be sure that all desired local folders are set up in hal_config.txt.
+- Be sure that you are on master branch, and it is up to date.
 - You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
 - `$ sh ~/Sites/_hal/drupal/acquia/update_howard_packages.sh`
 
 #### Update the twitter API key on all sites
 
-- Be sure that all desired local drush aliases are set up in hal_config.txt
+- Be sure that HAL is up to date.
+- Be sure that all desired local drush aliases are set up in hal_config.txt.
+- Be sure that you are on master branch, and it is up to date.
 - You may set twitter credentials in hal_config.txt and simply hit enter through the prompts, or paste them in as the prompts arise.
 - You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
 - `$ sh ~/Sites/_hal/drupal/acquia/update_twitter_api_key.sh`
 
 #### Update database on all acquia D8 sites
 
-- Be sure that all desired local drush aliases are set up in hal_config.txt
+- Be sure that HAL is up to date.
+- Be sure that all desired local drush aliases are set up in hal_config.txt.
+- Be sure all acquia drush aliases are up to date.
 - You may choose either hud8 or academicdepartments. The script then runs drush updb on all multi-sites on dev, stg, and prod.
 - You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
 - `$ sh ~/Sites/_hal/drupal/acquia/update_db_on_acquia.sh`
@@ -93,5 +107,4 @@ The following scripts are available:
 
 - Run composer add on all local codebases. "add the seckit module on all local D8 codebases" **In Progress**
 - Commit and push to DEV for all local codebases
-- Run drush updb for all sites, prefixed by dev/stg/prod. Basically: "run updb on all dev sites" or "run updb on all prod sites"
 - Deploy to prod for all codebases

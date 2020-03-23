@@ -6,11 +6,7 @@
 # $ sh ~/Sites/_hal/drupal/acquia/create_new_multisite.sh
 #
 # Notes:
-# - Be sure hal_config.txt is set up and working
-# - Refresh all drush aliases via dev desktop or similar
-# - Be sure you are on master branch, and that the env in question has DEV ENV set to MASTER.
-# - Be sure you run from ~/Sites/devdesktop/DESIRED_CODEBASE/docroot/sites
-# - Be sure you have created a database on the desired acquia install, and that you have the machine name handy.
+# - See README.md for detailed instructions.
 #
 # Dependencies:
 # - Drush: https://www.drush.org/
@@ -24,6 +20,9 @@
 
 echo "This script will create the local sites folder, commit and push to acquia."
 echo "Be sure you are on the correct branch to deploy to DEV env."
+
+# Check to ensure we are master git branch, and things are up to date.
+sh ~/Sites/_hal/drupal/acquia/partials/check_git_status.sh
 
 source ~/Sites/_hal/hal_config.txt
 
@@ -67,12 +66,6 @@ if [ -z "$DATABASE_NAME" ]; then
   exit 2
 fi
 
-#If this site folder already exists, remove it
-if [ -d "$SITE_NAME" ]; then
-    echo "$SITE_NAME is a directory that exists, overwritting..."
-    rm -R $SITE_NAME
-fi
-
 # Move to proper folder
 echo "Moving to proper folder..."
 if [ $ACQUIA_ENV = "@hud8.dev" ]
@@ -83,12 +76,21 @@ then
   cd ${LOCAL_HOWARD_D8_FOLDERS[1]}/docroot/sites
 fi
 
-# Copy _starter folder, which is our starter
+# Ensure repo is up to date
+git pull origin master
+
+#If this site folder already exists, remove it
+if [ -d "$SITE_NAME" ]; then
+    echo "$SITE_NAME is a directory that exists, overwritting..."
+    rm -R $SITE_NAME
+fi
+
+# Copy _starter folder, which is our stock starter
 echo "Copying starter site folder locally..."
 cp -R _starter_ $SITE_NAME
 chmod -R 777 $SITE_NAME
 
-# Adjust sites.php for dev, stg, prod
+# Adjust sites.php for dev, stg, prod URL's
 # Insert at line 3, line break at the end
 echo "Adding dev, stg, and prod URL's to sites.php..."
 sed -i '' '3i\'$'\n'" \ \ \ \ 'dev.${SITE_NAME}' => '${SITE_NAME}',"$'\\\n' sites.php
