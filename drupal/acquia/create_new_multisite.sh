@@ -74,7 +74,9 @@ then
 fi
 
 # Check to ensure we are master git branch, and things are up to date.
-sh ~/Sites/_hal/drupal/acquia/partials/check_git_status.sh
+DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
+. $DIR/partials/check_git_status.sh
 
 #If this site folder already exists, remove it
 if [ -d "$SITE_NAME" ]; then
