@@ -17,16 +17,14 @@
 
 echo "This script will update all Howard packagist projects in all local folders specified in hal_config.txt, commit and push to acquia."
 
-# Check to ensure we are master git branch, and things are up to date.
-sh ~/Sites/_hal/drupal/acquia/partials/check_git_status.sh
-
 source ~/Sites/_hal/hal_config.txt
 composer clearcache
 
 for app in ${LOCAL_HOWARD_D8_FOLDERS[@]}; do
   echo "Running update in $app"
   cd $app
-  git pull origin master
+  # Check to ensure we are master git branch, and things are up to date.
+  sh ~/Sites/_hal/drupal/acquia/partials/check_git_status.sh
   composer update 'howard/*'
   echo "commiting to git, and pushing..."
   git add .

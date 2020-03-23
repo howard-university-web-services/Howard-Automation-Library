@@ -21,9 +21,6 @@
 echo "This script will create the local sites folder, commit and push to acquia."
 echo "Be sure you are on the correct branch to deploy to DEV env."
 
-# Check to ensure we are master git branch, and things are up to date.
-sh ~/Sites/_hal/drupal/acquia/partials/check_git_status.sh
-
 source ~/Sites/_hal/hal_config.txt
 
 # Acquia ENV to create site on, use as $ACQUIA_ENV
@@ -76,8 +73,8 @@ then
   cd ${LOCAL_HOWARD_D8_FOLDERS[1]}/docroot/sites
 fi
 
-# Ensure repo is up to date
-git pull origin master
+# Check to ensure we are master git branch, and things are up to date.
+sh ~/Sites/_hal/drupal/acquia/partials/check_git_status.sh
 
 #If this site folder already exists, remove it
 if [ -d "$SITE_NAME" ]; then
