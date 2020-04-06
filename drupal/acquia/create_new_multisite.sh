@@ -122,7 +122,7 @@ rm hal_coasdept_dump.sql
 echo "copying files..."
 if [ $ACQUIA_ENV = "@hud8.dev" ]
 then
-  scp -3 -r hud8.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.dev/sites/coasdept.howard.edu/files hud8.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/academicdepartments.dev/sites/$SITE_NAME
+  scp -3 -r hud8.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.dev/sites/coasdept.howard.edu/files hud8.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.dev/sites/$SITE_NAME
 elif [ $ACQUIA_ENV = "@academicdepartments.dev" ]
 then
   scp -3 -r hud8.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.dev/sites/coasdept.howard.edu/files academicdepartments.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/academicdepartments.dev/sites/$SITE_NAME
