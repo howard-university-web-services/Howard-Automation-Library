@@ -5,8 +5,7 @@
 # $ sh ~/Sites/_hal/drupal/acquia/update_twitter_api_key.sh
 #
 # Notes:
-# - Be sure hal_config.txt is set up and working
-# - Refresh all drush aliases via dev desktop or similar
+# - See README.md for detailed instructions.
 #
 # Dependencies:
 # - drush
@@ -21,10 +20,10 @@ source ~/Sites/_hal/hal_config.txt
 
 # Choose acquia env for drush aliases
 echo "Please choose which acquia env to run this on:"
-envs=(".dev.dev" ".test.test" ".prod.prod")
-select env in "${envs[@]}"
+ENVS=(".dev.dev" ".test.test" ".prod.prod")
+select ENV in "${ENVS[@]}"
 do
-  echo "$env selected"
+  echo "$ENV selected"
   break
 done
 
@@ -49,12 +48,12 @@ read ACCESS_SECRET
 ACCESS_SECRET=${ACCESS_SECRET:-$TWITTER_ACCESS_SECRET}
 
 # Foreach drush alias, go on the server and set.
-for app in ${LOCAL_HOWARD_D8_DRUSH_ALIAS[@]}; do
-  echo "Running twitter credential updates for $app$env"
-  drush $app$env ssh "drush @sites cset hp_twitter_feed.settings api_key $API_KEY -y"
-  drush $app$env ssh "drush @sites cset hp_twitter_feed.settings api_secret $API_SECRET -y"
-  drush $app$env ssh "drush @sites cset hp_twitter_feed.settings access_token $ACCESS_TOKEN -y"
-  drush $app$env ssh "drush @sites cset hp_twitter_feed.settings access_secret $ACCESS_SECRET -y"
+for APP in ${LOCAL_HOWARD_D8_DRUSH_ALIAS[@]}; do
+  echo "Running twitter credential updates for $APP$ENV"
+  drush $APP$ENV ssh "drush @sites cset hp_twitter_feed.settings api_key $API_KEY -y"
+  drush $APP$ENV ssh "drush @sites cset hp_twitter_feed.settings api_secret $API_SECRET -y"
+  drush $APP$ENV ssh "drush @sites cset hp_twitter_feed.settings access_token $ACCESS_TOKEN -y"
+  drush $APP$ENV ssh "drush @sites cset hp_twitter_feed.settings access_secret $ACCESS_SECRET -y"
 done
 
 echo "Updates complete."
