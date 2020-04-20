@@ -68,6 +68,8 @@ The following full scripts are available:
 
 ##### Automated Steps (done by script after manual steps complete)
 
+You will also be given the option to commit/push immediately, and whether you wish to copy database and files from dev.coasdept.howard. Choosing "NO" on any, will skip these steps, and they will subsequently need to be performed manually. If git automation is not chosen, a new git branch will be created and used locally: "new_howard_multisite_TIMESTAMP".
+
 - Be sure that HAL is up to date.
 - Be sure that all desired local folders, and drush aliases are set up in hal_config.txt.
 - Be sure that you are on master branch, and it is up to date.
@@ -76,6 +78,8 @@ The following full scripts are available:
 - `$ sh ~/Sites/_hal/drupal/acquia/create_new_multisite.sh`
 
 #### Update all Howard packagist repos, on all Howard D8 sites, commit, and push to acquia
+
+You will also be given the option to commit/push immediately. If git automation is not chosen, a new git branch will be created and used locally: "new_howard_multisite_TIMESTAMP".
 
 - Be sure that HAL is up to date.
 - Be sure that all desired local folders are set up in hal_config.txt.

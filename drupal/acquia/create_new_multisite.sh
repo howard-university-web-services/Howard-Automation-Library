@@ -16,12 +16,16 @@
 # - HR Name | 'Example Site' | 'Example School'
 # - Site Name | 'example.howard.edu' | 'school.howard.edu'
 # - Database Name | 'example' | The machine name of the DB added to acquia
+# - Push Git | Defines whether to commit and push code
+# - Copy DB | Defines whether to copy dev.coasdept DB
+# - Copy Files | Defines whether to copy dev.coasdept files
 #
 
 echo "This script will create the local sites folder, commit and push to acquia."
 echo "Be sure you are on the correct branch to deploy to DEV env."
 
 source ~/Sites/_hal/hal_config.txt
+YES_NO=( "YES" "NO" )
 
 # Acquia ENV to create site on, use as $ACQUIA_ENV
 TO_ACQUIA_ENVS=( "@hud8.dev" "@academicdepartments.dev" )
@@ -63,6 +67,38 @@ if [ -z "$DATABASE_NAME" ]; then
   exit 2
 fi
 
+# See if user wishes to automatically commit and push.
+echo "Do you wish to automatically commit these changes and push to master branch?"
+select PUSH_GIT in "${YES_NO[@]}"; do
+  if [[ -z "$" ]]; then
+    printf '"%s" is not a valid choice\n' "$REPLY" >&2
+  else
+    break
+  fi
+done
+
+# See if user wishes to automatically copy database.
+echo "Do you wish to automatically copy the dev.coasdept DB to this new site?"
+select COPY_DB in "${YES_NO[@]}"; do
+  if [[ -z "$" ]]; then
+    printf '"%s" is not a valid choice\n' "$REPLY" >&2
+  else
+    break
+  fi
+done
+
+# See if user wishes to automatically copy files.
+echo "Do you wish to automatically copy the dev.coasdept files to this new site?"
+select COPY_FILES in "${YES_NO[@]}"; do
+  if [[ -z "$" ]]; then
+    printf '"%s" is not a valid choice\n' "$REPLY" >&2
+  else
+    break
+  fi
+done
+
+
+
 # Move to proper folder
 echo "Moving to proper folder..."
 if [ $ACQUIA_ENV = "@hud8.dev" ]
@@ -77,6 +113,19 @@ fi
 DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 . $DIR/partials/check_git_status.sh
+
+# If not automating git ops, create new branch.
+if [ $PUSH_GIT = "NO" ]
+then
+  echo "Creating new git branch, since automatic pushes not chosen."
+  STAMP="$(date '+%Y_%m_%d_%H_%M_%S')"
+  BRANCH="new_howard_multisite_$STAMP"
+  echo "$BRANCH"
+  git branch $BRANCH
+  git checkout $BRANCH
+else
+  echo "GIT commits and push enabled, staying on master branch."
+fi
 
 #If this site folder already exists, remove it
 if [ -d "$SITE_NAME" ]; then
@@ -105,27 +154,42 @@ find . -type f -exec sed -i '' -e "s/SITENAME/${SITE_NAME}/g" {} \;
 find . -type f -exec sed -i '' -e "s/DATABASENAME/${DATABASE_NAME}/g" {} \;
 
 # Git commit and push
-echo "commiting to git, and pushing..."
-cd ../
-git add .
-git commit -m 'Adding new multisite, via Howard Automation Library'
-git push origin master
+if [ $PUSH_GIT = "YES" ]
+then
+  echo "commiting to git, and pushing..."
+  cd ../
+  git add .
+  git commit -m 'Adding new multisite, via Howard Automation Library'
+  git push origin master
+else
+  echo "GIT commits and push skipped. Site will not work on acquia untill manually commited and pushed."
+fi
 
 # Clone database
-echo "cloning database..."
-drush @hud8.dev --uri=dev.coasdept.howard.edu sql-dump --result-file= > hal_coasdept_dump.sql
-drush $ACQUIA_ENV --uri=dev.$SITE_NAME sql-drop
-drush $ACQUIA_ENV --uri=dev.$SITE_NAME sql-cli < hal_coasdept_dump.sql
-rm hal_coasdept_dump.sql
+if [ $COPY_DB = "YES" ]
+then
+  echo "cloning database..."
+  drush @hud8.dev --uri=dev.coasdept.howard.edu sql-dump --result-file= > hal_coasdept_dump.sql
+  drush $ACQUIA_ENV --uri=dev.$SITE_NAME sql-drop
+  drush $ACQUIA_ENV --uri=dev.$SITE_NAME sql-cli < hal_coasdept_dump.sql
+  rm hal_coasdept_dump.sql
+else
+  echo "Copy Database skipped. All database configuration must be manually done."
+fi
 
 # Copy Files
-echo "copying files..."
-if [ $ACQUIA_ENV = "@hud8.dev" ]
+if [ $COPY_FILES = "YES" ]
 then
-  scp -3 -r hud8.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.dev/sites/coasdept.howard.edu/files hud8.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.dev/sites/$SITE_NAME
-elif [ $ACQUIA_ENV = "@academicdepartments.dev" ]
-then
-  scp -3 -r hud8.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.dev/sites/coasdept.howard.edu/files academicdepartments.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/academicdepartments.dev/sites/$SITE_NAME
+  echo "copying files..."
+  if [ $ACQUIA_ENV = "@hud8.dev" ]
+  then
+    scp -3 -r hud8.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.dev/sites/coasdept.howard.edu/files hud8.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.dev/sites/$SITE_NAME
+  elif [ $ACQUIA_ENV = "@academicdepartments.dev" ]
+  then
+    scp -3 -r hud8.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.dev/sites/coasdept.howard.edu/files academicdepartments.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/academicdepartments.dev/sites/$SITE_NAME
+  fi
+else
+  echo "Copy files skipped. New site will not have starter images/etc."
 fi
 
 # Clear cache
