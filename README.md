@@ -20,6 +20,8 @@ Clone this repo into your ~/Sites folder, as "_hal"
 
 - LOCAL_HOWARD_D8_FOLDERS[0] = Your local hud8 root folder.
 - LOCAL_HOWARD_D8_FOLDERS[1] = Your local academicdepartments root folder.
+- E_MAIL = Your Acquia E-mail.
+- PRIVATE_KEY= Acquia Private Key.
 - Navigate to your DevDesktop sites folder.
 - Find the folder you wish to use, ie "hud8-dev"
 - `cd hud8-dev`
@@ -30,6 +32,14 @@ Clone this repo into your ~/Sites folder, as "_hal"
 
 - Run `drush sa` for a list of current drush aliases.
 - You should see `@cl.prod_academicdepartments.dev.dev` and `@cl.prod_hud8.dev.dev`, with others for stg and prod installs of each. These would be added as `@cl.prod_academicdepartments`, leaving off the env connotation, as we set that in a choice per script, so that you may choose in the script which env to run them on.
+
+###### Finding your Acquia Private Key and E-mail
+
+- Log into your Acquia account
+- Go to your Account settings
+- Select the "Credentials" menu item
+- Confirm your current password
+- Retrieve both your Private Key and E-mail from the "Cloud API" section
 
 ### Requirements
 
@@ -68,8 +78,6 @@ The following full scripts are available:
 
 ##### Automated Steps (done by script after manual steps complete)
 
-You will also be given the option to commit/push immediately, and whether you wish to copy database and files from dev.coasdept.howard. Choosing "NO" on any, will skip these steps, and they will subsequently need to be performed manually. If git automation is not chosen, a new git branch will be created and used locally: "new_howard_multisite_TIMESTAMP".
-
 - Be sure that HAL is up to date.
 - Be sure that all desired local folders, and drush aliases are set up in hal_config.txt.
 - Be sure that you are on master branch, and it is up to date.
@@ -78,8 +86,6 @@ You will also be given the option to commit/push immediately, and whether you wi
 - `$ sh ~/Sites/_hal/drupal/acquia/create_new_multisite.sh`
 
 #### Update all Howard packagist repos, on all Howard D8 sites, commit, and push to acquia
-
-You will also be given the option to commit/push immediately. If git automation is not chosen, a new git branch will be created and used locally: "new_howard_multisite_TIMESTAMP".
 
 - Be sure that HAL is up to date.
 - Be sure that all desired local folders are set up in hal_config.txt.
