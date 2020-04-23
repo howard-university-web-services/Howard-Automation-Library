@@ -28,18 +28,18 @@ Clone this repo into your ~/Sites folder, as "_hal"
 - `pwd`: The out put of this would go into hal_config.txt as `LOCAL_HOWARD_D8_FOLDERS[0]="/PATH/TO/YOUR/FOLDER/hud8-dev"` (NOTICE THE "0" HERE).
 - Subsequent paths, Academic Departments,for additional Howard D8 environments you wish to update would go into hal_config.txt as `LOCAL_HOWARD_D8_FOLDERS[1]="/PATH/TO/YOUR/OTHER/FOLDER/academicdepartments-dev"` (NOTICE THE "1" HERE).
 
-#### Finding your local drush aliases
-
-- Run `drush sa` for a list of current drush aliases.
-- You should see `@cl.prod_academicdepartments.dev.dev` and `@cl.prod_hud8.dev.dev`, with others for stg and prod installs of each. These would be added as `@cl.prod_academicdepartments`, leaving off the env connotation, as we set that in a choice per script, so that you may choose in the script which env to run them on.
-
-###### Finding your Acquia Private Key and E-mail
+#### Finding your Acquia Private Key and E-mail
 
 - Log into your Acquia account
 - Go to your Account settings
 - Select the "Credentials" menu item
 - Confirm your current password
 - Retrieve both your Private Key and E-mail from the "Cloud API" section
+
+#### Finding your local drush aliases
+
+- Run `drush sa` for a list of current drush aliases.
+- You should see `@cl.prod_academicdepartments.dev.dev` and `@cl.prod_hud8.dev.dev`, with others for stg and prod installs of each. These would be added as `@cl.prod_academicdepartments`, leaving off the env connotation, as we set that in a choice per script, so that you may choose in the script which env to run them on.
 
 ### Requirements
 
@@ -78,6 +78,8 @@ The following full scripts are available:
 
 ##### Automated Steps (done by script after manual steps complete)
 
+You will also be given the option to commit/push immediately, and whether you wish to copy database and files from dev.coasdept.howard. Choosing "NO" on any, will skip these steps, and they will subsequently need to be performed manually. If git automation is not chosen, a new git branch will be created and used locally: "new_howard_multisite_TIMESTAMP".
+
 - Be sure that HAL is up to date.
 - Be sure that all desired local folders, and drush aliases are set up in hal_config.txt.
 - Be sure that you are on master branch, and it is up to date.
@@ -86,6 +88,8 @@ The following full scripts are available:
 - `$ sh ~/Sites/_hal/drupal/acquia/create_new_multisite.sh`
 
 #### Update all Howard packagist repos, on all Howard D8 sites, commit, and push to acquia
+
+You will also be given the option to commit/push immediately. If git automation is not chosen, a new git branch will be created and used locally: "new_howard_multisite_TIMESTAMP".
 
 - Be sure that HAL is up to date.
 - Be sure that all desired local folders are set up in hal_config.txt.
@@ -118,3 +122,4 @@ The following full scripts are available:
 - Run composer add on all local codebases. "add the seckit module on all local D8 codebases" **In Progress**
 - Commit and push to DEV for all local codebases
 - Deploy to prod for all codebases
+
