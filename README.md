@@ -20,8 +20,8 @@ Clone this repo into your ~/Sites folder, as "_hal"
 
 - LOCAL_HOWARD_D8_FOLDERS[0] = Your local hud8 root folder.
 - LOCAL_HOWARD_D8_FOLDERS[1] = Your local academicdepartments root folder.
-- E_MAIL = Your Acquia E-mail.
-- PRIVATE_KEY= Acquia Private Key.
+- ACQUIA_EMAIL = Your Acquia E-mail.
+- ACQUIA_PRIVATE_KEY= Acquia Private Key.
 - Navigate to your DevDesktop sites folder.
 - Find the folder you wish to use, ie "hud8-dev"
 - `cd hud8-dev`
