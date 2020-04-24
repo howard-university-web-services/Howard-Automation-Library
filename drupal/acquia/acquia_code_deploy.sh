@@ -28,13 +28,13 @@ select ACQUIA_ENV in "${TO_ACQUIA_ENVS[@]}"; do
   fi
 done
 
-#select  dev docroot folder
+#select dev docroot folder
 if [ $ACQUIA_ENV = "@hud8" ]
 then
-  cd ${LOCAL_HOWARD_D8_FOLDERS[0]}/docroot/
+  cd ${LOCAL_HOWARD_D8_FOLDERS[0]}
 elif [ $ACQUIA_ENV = "@academicdepartments" ]
 then
-  cd ${LOCAL_HOWARD_D8_FOLDERS[1]}/docroot/
+  cd ${LOCAL_HOWARD_D8_FOLDERS[1]}
 fi
 
 echo 'Creating new tag on the master branch'
@@ -55,8 +55,14 @@ else
   TAG=$DATE
 fi
 
-git pull origin master
-git push origin master
-git push origin --tags
+# Check if Acquia E-mail and Private Key are not empty
+if [ -z "$ACQUIA_EMAIL" ] || [ -z "$ACQUIA_PRIVATE_KEY" ]; then
+  echo "You are missing either your Acquia e-mail or Acquia private key. Please update your credienatials"
+  exit 2
+else
+  git pull origin master
+  git push origin master
+  git push origin --tags
+fi
 
-drush @hud8.prod ssh "drush $ACQUIA_ENV.prod ac-code-path-deploy tags/${TAG} --email=${E_MAIL} --key=${PRIVATE_KEY} && exit"
+drush @hud8.prod ssh "drush $ACQUIA_ENV.prod ac-code-path-deploy tags/${TAG} --email=${ACQUIA_EMAIL} --key=${ACQUIA_PRIVATE_KEY} && exit"
