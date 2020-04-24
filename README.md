@@ -115,7 +115,7 @@ You will also be given the option to commit/push immediately. If git automation 
 - You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
 - `$ sh ~/Sites/_hal/drupal/acquia/update_db_on_acquia.sh`
 
-#### Push master branch, create Tag and deploy to Acquia Prod Environment
+#### Push master branch, creates new Tag and deploys new Tag to Acquia Prod Environment
 - Be sure that HAL is up to date.
 - Be sure that all desired local drush aliases are set up in hal_config.txt.
 - Be sure all acquia drush aliases are up to date.
