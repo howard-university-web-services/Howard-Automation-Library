@@ -20,11 +20,21 @@ Clone this repo into your ~/Sites folder, as "_hal"
 
 - LOCAL_HOWARD_D8_FOLDERS[0] = Your local hud8 root folder.
 - LOCAL_HOWARD_D8_FOLDERS[1] = Your local academicdepartments root folder.
+- ACQUIA_EMAIL = Your Acquia E-mail.
+- ACQUIA_PRIVATE_KEY= Acquia Private Key.
 - Navigate to your DevDesktop sites folder.
 - Find the folder you wish to use, ie "hud8-dev"
 - `cd hud8-dev`
 - `pwd`: The out put of this would go into hal_config.txt as `LOCAL_HOWARD_D8_FOLDERS[0]="/PATH/TO/YOUR/FOLDER/hud8-dev"` (NOTICE THE "0" HERE).
 - Subsequent paths, Academic Departments,for additional Howard D8 environments you wish to update would go into hal_config.txt as `LOCAL_HOWARD_D8_FOLDERS[1]="/PATH/TO/YOUR/OTHER/FOLDER/academicdepartments-dev"` (NOTICE THE "1" HERE).
+
+#### Finding your Acquia Private Key and E-mail
+
+- Log into your Acquia account
+- Go to your Account settings
+- Select the "Credentials" menu item
+- Confirm your current password
+- Retrieve both your Private Key and E-mail from the "Cloud API" section
 
 #### Finding your local drush aliases
 
@@ -105,6 +115,17 @@ You will also be given the option to commit/push immediately. If git automation 
 - You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
 - `$ sh ~/Sites/_hal/drupal/acquia/update_db_on_acquia.sh`
 
+#### Push master branch, creates new Tag and deploys new Tag to Acquia Prod Environment
+- Be sure that HAL is up to date.
+- Be sure that all desired local drush aliases are set up in hal_config.txt.
+- Be sure all acquia drush aliases are up to date.
+- Be sure either the HUD8 or the academicdepartments master branch is up-to-date
+- Be sure Acquia Private Key and Acquia E-mail are up to date.
+- You may choose either hud8 or academicdepartments Prod Environment.
+- This script will push master branch, create new Tag  and deploy code to the selected Prod environment.
+- You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
+- `$ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh`
+
 ## Roadmap
 
 ### All Howard D8 acquia codebases
@@ -112,3 +133,4 @@ You will also be given the option to commit/push immediately. If git automation 
 - Run composer add on all local codebases. "add the seckit module on all local D8 codebases" **In Progress**
 - Commit and push to DEV for all local codebases
 - Deploy to prod for all codebases
+
