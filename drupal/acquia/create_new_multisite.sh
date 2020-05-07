@@ -97,14 +97,12 @@ select COPY_FILES in "${YES_NO[@]}"; do
   fi
 done
 
-
-
 # Move to proper folder
 echo "Moving to proper folder..."
-if [ $ACQUIA_ENV = "@hud8.dev" ]
+if [[ $ACQUIA_ENV = "@hud8.dev" ]]
 then
   cd ${LOCAL_HOWARD_D8_FOLDERS[0]}/docroot/sites
-elif [ $ACQUIA_ENV = "@academicdepartments.dev" ]
+elif [[ $ACQUIA_ENV = "@academicdepartments.dev" ]]
 then
   cd ${LOCAL_HOWARD_D8_FOLDERS[1]}/docroot/sites
 fi
@@ -115,7 +113,7 @@ if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 . $DIR/partials/check_git_status.sh
 
 # If not automating git ops, create new branch.
-if [ $PUSH_GIT = "NO" ]
+if [[ $PUSH_GIT = "NO" ]]
 then
   echo "Creating new git branch, since automatic pushes not chosen."
   STAMP="$(date '+%Y_%m_%d_%H_%M_%S')"
@@ -154,7 +152,7 @@ find . -type f -exec sed -i '' -e "s/SITENAME/${SITE_NAME}/g" {} \;
 find . -type f -exec sed -i '' -e "s/DATABASENAME/${DATABASE_NAME}/g" {} \;
 
 # Git commit and push
-if [ $PUSH_GIT = "YES" ]
+if [[ $PUSH_GIT = "YES" ]]
 then
   echo "commiting to git, and pushing..."
   cd ../
@@ -166,7 +164,7 @@ else
 fi
 
 # Clone database
-if [ $COPY_DB = "YES" ]
+if [[ $COPY_DB = "YES" ]]
 then
   echo "cloning database..."
   drush @hud8.dev --uri=dev.coasdept.howard.edu sql-dump --result-file= > hal_coasdept_dump.sql
@@ -178,7 +176,7 @@ else
 fi
 
 # Copy Files
-if [ $COPY_FILES = "YES" ]
+if [[ $COPY_FILES = "YES" ]]
 then
   echo "copying files..."
   if [ $ACQUIA_ENV = "@hud8.dev" ]
