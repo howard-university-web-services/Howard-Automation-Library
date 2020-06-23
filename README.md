@@ -106,6 +106,15 @@ You will also be given the option to commit/push immediately. If git automation 
 - You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
 - `$ sh ~/Sites/_hal/drupal/acquia/update_twitter_api_key.sh`
 
+#### Update config item on all sites
+
+- Be sure that HAL is up to date.
+- Be sure that all desired local drush aliases are set up in hal_config.txt.
+- Paste in Name, Key, and Value as the prompts arise.
+- Relies on [drush cset](https://drushcommands.com/drush-8x/config/config-set/), please ensure this is understood before using.
+- `$ sh ~/Sites/_hal/drupal/acquia/update_config.sh`
+- See [idfive developer documentation](https://developers.idfive.com/#/back-end/drupal/drupal-config-management?id=one-time-config-overrides-via-drush) for overview of approach, and finding Name, Key, and Values desired.
+
 #### Update database on all acquia D8 sites
 
 - Be sure that HAL is up to date.
