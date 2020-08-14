@@ -115,6 +115,14 @@ You will also be given the option to commit/push immediately. If git automation 
 - `$ sh ~/Sites/_hal/drupal/acquia/update_config.sh`
 - See [idfive developer documentation](https://developers.idfive.com/#/back-end/drupal/drupal-config-management?id=one-time-config-overrides-via-drush) for overview of approach, and finding Name, Key, and Values desired.
 
+#### Run drush command on all sites
+
+- Be sure that HAL is up to date.
+- Be sure that all desired local drush aliases are set up in hal_config.txt.
+- Paste in desired drush command at the prompt.
+- Add the desired command only, ie "pm-uninstall page_cache", as things like "drush" and "@sites" are added by the script.
+- `$ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh`
+
 #### Update database on all acquia D8 sites
 
 - Be sure that HAL is up to date.
@@ -125,6 +133,7 @@ You will also be given the option to commit/push immediately. If git automation 
 - `$ sh ~/Sites/_hal/drupal/acquia/update_db_on_acquia.sh`
 
 #### Push master branch, creates new Tag and deploys new Tag to Acquia Prod Environment
+
 - Be sure that HAL is up to date.
 - Be sure that all desired local drush aliases are set up in hal_config.txt.
 - Be sure all acquia drush aliases are up to date.
@@ -142,4 +151,3 @@ You will also be given the option to commit/push immediately. If git automation 
 - Run composer add on all local codebases. "add the seckit module on all local D8 codebases" **In Progress**
 - Commit and push to DEV for all local codebases
 - Deploy to prod for all codebases
-
