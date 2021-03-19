@@ -29,7 +29,7 @@ do
 done
 
 # Config Name, use as $DRUSH_COMMAND
-echo "Enter the drush command. (e.g. pm-uninstall page_cache):"
+echo "Enter the drush command. (e.g. pm:enable page_cache):"
 read DRUSH_COMMAND
 
 # Check Config Name is not empty
