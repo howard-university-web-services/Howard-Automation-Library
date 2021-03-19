@@ -41,7 +41,7 @@ fi
 # Foreach drush alias, go on the server and set.
 for APP in ${LOCAL_HOWARD_D8_DRUSH_ALIAS[@]}; do
   echo "Running config updates for $APP$ENV"
-  drush $APP$ENV ssh "drush @sites $DRUSH_COMMAND -y"
+  drush $APP$ENV ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh $DRUSH_COMMAND"
 done
 
 echo "drush updates complete on $APP$ENV."

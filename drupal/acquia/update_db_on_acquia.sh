@@ -14,7 +14,7 @@
 # - Acquia Environment | corresponds to local drush aliases for acquia environments
 #
 
-echo "This script will update all databases on the specified Acque environments, for dev, stg, and prod."
+echo "This script will update all databases on the specified Acquia environments, for dev, stg, and prod."
 
 source ~/Sites/_hal/hal_config.txt
 
@@ -30,7 +30,7 @@ done
 
 for ENV in 'dev' 'test' 'prod'
 do
-  drush $ACQUIA_ENV.$ENV ssh "drush @sites updb -y && exit"
+  drush $ACQUIA_ENV.$ENV ssh "bash /var/www/html/${AH_SITE_NAME}/scripts/hal_sites.sh updb && exit"
   echo $ACQUIA_ENV.$ENV "Updates complete.";
 done
 

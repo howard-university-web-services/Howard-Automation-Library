@@ -61,6 +61,45 @@ Use git to keep this library up date on your local machine.
 - `$ sh your_desired_script.sh`
 - Do not use sudo
 
+## How this interacts with the acquia server
+
+Since drush 9 and above does away with the @sites alias, we needed to create a script on the server that essentially loops through all sites on an install, and runs drush commands/etc. This script is located in each codebase, under `scripts/hal_sites.sh`. It is interacted with, both through this library, and via CRON scheduled jobs on acquia. For scheduled jobs, see the [acquia documentation](https://docs.acquia.com/cloud-platform/manage/cron/#cloud-execute-shell-script). At its essence, it provides a way to run the same drush command on all multi-sites within an environment.
+
+### Example script on server, scripts/hal_sites.sh
+
+```sh
+  #!/bin/bash
+
+  # Provide the absolute path to the sites directory.
+  SITES="/var/www/html/${AH_SITE_NAME}/docroot/sites"
+
+  # Validate and hint if no argument provided.
+  if [ "${#}" -eq 0 ]; then
+    echo "drush: missing argument(s). Please add the drush command you wish to run on all sites."
+    echo "The 'drush' will be added automatically, please only add the actual command desired. EXAMPLE: cex -y"
+  else
+    cd "${SITES}"
+    # Loop:
+    for SITE in $(ls -d */ | cut -f1 -d'/'); do
+      # Skip default sites, only run for howard url's.
+      if [[ "${SITE}" == *".howard.edu"* ]]; then
+        echo "======================================"
+        echo "Running command: drush -l ${SITE} ${@} -y"
+        echo "======================================"
+        drush -l "${SITE}" "${@}" -y | awk '{print "["strftime("\%Y-\%m-\%d \%H:\%M:\%S \%Z")"] "$0}' &>> /var/log/sites/${AH_SITE_NAME}/logs/$(hostname -s)/drush-cron.log
+      fi
+    done
+  fi
+```
+
+### Usage of server hal_sites.sh
+
+When running this script, 'drush' and the '-y' flag, are automatically added to the drush command you wish to run. It is quite important to "not use command aliases" with this script. Ie, use "pm:enable" not "en". Related too [this issue](https://github.com/drush-ops/drush/issues/3025) if curious as to why.
+
+- From root folder on acquia server, check status: `bash scripts/hal_sites.sh status`. In this instance, 'status' is the drush command to run.
+- From root folder on acquia server, clear cache: `bash scripts/hal_sites.sh cr`. In this instance, 'cr' is the drush command to run.
+- From scheduled task runner on acquia: `bash /var/www/html/${AH_SITE_NAME}/scripts/hal_sites.sh cr`. Clears caches on all sites in install, to run hourly or whatever desired.
+
 ## Drupal 8
 
 The following full scripts are available:
