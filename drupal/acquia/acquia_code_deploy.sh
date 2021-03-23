@@ -65,4 +65,4 @@ else
   git push origin --tags
 fi
 
-drush @hud8.prod ssh "drush $ACQUIA_ENV.prod ac-code-path-deploy tags/${TAG} --email=${ACQUIA_EMAIL} --key=${ACQUIA_PRIVATE_KEY} && exit"
+${LOCAL_DRUSH} @hud8.prod ssh "drush $ACQUIA_ENV.prod ac-code-path-deploy tags/${TAG} --email=${ACQUIA_EMAIL} --key=${ACQUIA_PRIVATE_KEY} && exit"

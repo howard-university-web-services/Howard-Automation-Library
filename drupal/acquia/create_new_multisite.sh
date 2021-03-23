@@ -167,9 +167,9 @@ fi
 if [[ $COPY_DB = "YES" ]]
 then
   echo "cloning database..."
-  drush @hud8.dev --uri=dev.coasdept.howard.edu sql-dump --result-file= > hal_coasdept_dump.sql
-  drush $ACQUIA_ENV --uri=dev.$SITE_NAME sql-drop
-  drush $ACQUIA_ENV --uri=dev.$SITE_NAME sql-cli < hal_coasdept_dump.sql
+  ${LOCAL_DRUSH} @hud8.dev --uri=dev.coasdept.howard.edu sql-dump --result-file= > hal_coasdept_dump.sql
+  ${LOCAL_DRUSH} $ACQUIA_ENV --uri=dev.$SITE_NAME sql-drop
+  ${LOCAL_DRUSH} $ACQUIA_ENV --uri=dev.$SITE_NAME sql-cli < hal_coasdept_dump.sql
   rm hal_coasdept_dump.sql
 else
   echo "Copy Database skipped. All database configuration must be manually done."
@@ -191,4 +191,4 @@ else
 fi
 
 # Clear cache
-drush $ACQUIA_ENV --uri=dev.$SITE_NAME cr
+${LOCAL_DRUSH} $ACQUIA_ENV --uri=dev.$SITE_NAME cr

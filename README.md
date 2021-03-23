@@ -13,6 +13,7 @@ Clone this repo into your ~/Sites folder, as "_hal"
 
 - `$ cd ~/Sites/_hal`
 - `$ cp hal_config.default.txt hal_config.txt`
+- Edit hal_config.txt to use the desired drush.
 - Edit hal_config.txt to use the absolute path to any local Howard D8 repos you wish to update/use.
 - Edit hal_config.txt to use the local drush aliases you have.
 
@@ -27,14 +28,6 @@ Clone this repo into your ~/Sites folder, as "_hal"
 - `cd hud8-dev`
 - `pwd`: The out put of this would go into hal_config.txt as `LOCAL_HOWARD_D8_FOLDERS[0]="/PATH/TO/YOUR/FOLDER/hud8-dev"` (NOTICE THE "0" HERE).
 - Subsequent paths, Academic Departments,for additional Howard D8 environments you wish to update would go into hal_config.txt as `LOCAL_HOWARD_D8_FOLDERS[1]="/PATH/TO/YOUR/OTHER/FOLDER/academicdepartments-dev"` (NOTICE THE "1" HERE).
-
-#### Finding your Acquia Private Key and E-mail
-
-- Log into your Acquia account
-- Go to your Account settings
-- Select the "Credentials" menu item
-- Confirm your current password
-- Retrieve both your Private Key and E-mail from the "Cloud API" section
 
 #### Finding your local drush aliases
 

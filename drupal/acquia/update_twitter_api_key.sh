@@ -50,10 +50,10 @@ ACCESS_SECRET=${ACCESS_SECRET:-$TWITTER_ACCESS_SECRET}
 # Foreach drush alias, go on the server and set.
 for APP in ${LOCAL_HOWARD_D8_DRUSH_ALIAS[@]}; do
   echo "Running twitter credential updates for $APP$ENV"
-  drush $APP$ENV ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh cset hp_twitter_feed.settings api_key $API_KEY"
-  drush $APP$ENV ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh cset hp_twitter_feed.settings api_secret $API_SECRET"
-  drush $APP$ENV ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh cset hp_twitter_feed.settings access_token $ACCESS_TOKEN"
-  drush $APP$ENV ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh cset hp_twitter_feed.settings access_secret $ACCESS_SECRET"
+  ${LOCAL_DRUSH} $APP$ENV ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh cset hp_twitter_feed.settings api_key $API_KEY"
+  ${LOCAL_DRUSH} $APP$ENV ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh cset hp_twitter_feed.settings api_secret $API_SECRET"
+  ${LOCAL_DRUSH} $APP$ENV ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh cset hp_twitter_feed.settings access_token $ACCESS_TOKEN"
+  ${LOCAL_DRUSH} $APP$ENV ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh cset hp_twitter_feed.settings access_secret $ACCESS_SECRET"
 done
 
 echo "Updates complete."

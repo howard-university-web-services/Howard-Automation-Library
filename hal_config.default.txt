@@ -1,10 +1,9 @@
+LOCAL_DRUSH="/Users/YOUR_USER/Sites/devdesktop/hud8-dev/docroot/vendor/bin/drush"
 LOCAL_HOWARD_D8_FOLDERS[0]="/Users/YOUR_USER/Sites/devdesktop/hud8-dev"
 LOCAL_HOWARD_D8_FOLDERS[1]="/Users/YOUR_USER/Sites/devdesktop/academicdepartments-dev"
-LOCAL_HOWARD_D8_DRUSH_ALIAS[0]="@cl.prod_hud8"
-LOCAL_HOWARD_D8_DRUSH_ALIAS[1]="@cl.prod_academicdepartments"
+LOCAL_HOWARD_D8_DRUSH_ALIAS[0]="@hud8"
+LOCAL_HOWARD_D8_DRUSH_ALIAS[1]="@academicdepartments"
 TWITTER_API_KEY=API Key Here
 TWITTER_API_SECRET=API Secret Here
 TWITTER_ACCESS_TOKEN=Access Token Here
 TWITTER_ACCESS_SECRET=Access Secret Here
-ACQUIA_EMAIL=Acquia E-mail
-ACQUIA_PRIVATE_KEY=Acquia Private Key

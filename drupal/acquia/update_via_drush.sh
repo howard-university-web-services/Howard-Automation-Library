@@ -15,13 +15,13 @@
 # - Drush command | ie, pm-uninstall page_cache
 #
 
-echo "Updating custom config for Howard D8 sites."
+echo "Updating via drush for Howard D8 sites."
 
 source ~/Sites/_hal/hal_config.txt
 
 # Choose acquia env for drush aliases
 echo "Please choose which acquia env to run this on:"
-ENVS=(".dev.dev" ".test.test" ".prod.prod")
+ENVS=(".dev" ".test" ".prod")
 select ENV in "${ENVS[@]}"
 do
   echo "$ENV selected"
@@ -41,7 +41,7 @@ fi
 # Foreach drush alias, go on the server and set.
 for APP in ${LOCAL_HOWARD_D8_DRUSH_ALIAS[@]}; do
   echo "Running config updates for $APP$ENV"
-  drush $APP$ENV ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh $DRUSH_COMMAND"
+  ${LOCAL_DRUSH} $APP$ENV ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh $DRUSH_COMMAND"
 done
 
 echo "drush updates complete on $APP$ENV."
