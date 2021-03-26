@@ -28,7 +28,7 @@ source ~/Sites/_hal/hal_config.txt
 YES_NO=( "YES" "NO" )
 
 # Acquia ENV to create site on, use as $ACQUIA_ENV
-TO_ACQUIA_ENVS=( "@hud8.dev" "@academicdepartments.dev" )
+TO_ACQUIA_ENVS=( "${LOCAL_HOWARD_D8_DRUSH_ALIAS[0]}.dev" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[1]}.dev" )
 select ACQUIA_ENV in "${TO_ACQUIA_ENVS[@]}"; do
   if [[ -z "$" ]]; then
     printf '"%s" is not a valid choice\n' "$REPLY" >&2
@@ -167,9 +167,9 @@ fi
 if [[ $COPY_DB = "YES" ]]
 then
   echo "cloning database..."
-  ${LOCAL_DRUSH} @hud8.dev --uri=dev.coasdept.howard.edu sql-dump --result-file= > hal_coasdept_dump.sql
-  ${LOCAL_DRUSH} $ACQUIA_ENV --uri=dev.$SITE_NAME sql-drop
-  ${LOCAL_DRUSH} $ACQUIA_ENV --uri=dev.$SITE_NAME sql-cli < hal_coasdept_dump.sql
+  ${LOCAL_DRUSH} -Dssh.tty=0 ${LOCAL_HOWARD_D8_DRUSH_ALIAS[0]}.dev --uri=dev.coasdept.howard.edu sql:dump > hal_coasdept_dump.sql
+  ${LOCAL_DRUSH} $ACQUIA_ENV --uri=dev.$SITE_NAME sql:drop
+  ${LOCAL_DRUSH} $ACQUIA_ENV --uri=dev.$SITE_NAME sql:cli < hal_coasdept_dump.sql
   rm hal_coasdept_dump.sql
 else
   echo "Copy Database skipped. All database configuration must be manually done."
@@ -179,10 +179,10 @@ fi
 if [[ $COPY_FILES = "YES" ]]
 then
   echo "copying files..."
-  if [ $ACQUIA_ENV = "@hud8.dev" ]
+  if [ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[0]}.dev" ]
   then
     scp -3 -r hud8.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.dev/sites/coasdept.howard.edu/files hud8.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.dev/sites/$SITE_NAME
-  elif [ $ACQUIA_ENV = "@academicdepartments.dev" ]
+  elif [ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[1]}.dev" ]
   then
     scp -3 -r hud8.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.dev/sites/coasdept.howard.edu/files academicdepartments.dev@staging-14271.prod.hosting.acquia.com:/mnt/files/academicdepartments.dev/sites/$SITE_NAME
   fi

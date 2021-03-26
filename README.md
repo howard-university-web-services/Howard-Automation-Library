@@ -107,6 +107,7 @@ The following full scripts are available:
 
 - Create database in desired environment (hud8 or academicdepartments), and note machine name.
 - Add URLs for new site into dev/stg/live URL fields in acquia.
+- BOTH of these steps must be completed, as the drush scripts depend on both URL, and database being set up for the environment.
 
 ##### Automated Steps (done by script after manual steps complete)
 
