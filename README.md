@@ -17,12 +17,15 @@ Clone this repo into your ~/Sites folder, as "_hal"
 - Edit hal_config.txt to use the absolute path to any local Howard D8 repos you wish to update/use.
 - Edit hal_config.txt to use the local drush aliases you have.
 
+#### Setting a local drush
+
+- Navigate to the Drush 9 installed in the hud8 folder as a dependency, and adjust the path to match your local machine in config.
+- `LOCAL_DRUSH="/Users/YOUR_USER/Sites/devdesktop/hud8-dev/docroot/vendor/bin/drush"`
+
 #### Finding your local Howard D8 folders
 
 - LOCAL_HOWARD_D8_FOLDERS[0] = Your local hud8 root folder.
 - LOCAL_HOWARD_D8_FOLDERS[1] = Your local academicdepartments root folder.
-- ACQUIA_EMAIL = Your Acquia E-mail.
-- ACQUIA_PRIVATE_KEY= Acquia Private Key.
 - Navigate to your DevDesktop sites folder.
 - Find the folder you wish to use, ie "hud8-dev"
 - `cd hud8-dev`
@@ -32,7 +35,7 @@ Clone this repo into your ~/Sites folder, as "_hal"
 #### Finding your local drush aliases
 
 - Run `drush sa` for a list of current drush aliases.
-- You should see `@cl.prod_academicdepartments.dev.dev` and `@cl.prod_hud8.dev.dev`, with others for stg and prod installs of each. These would be added as `@cl.prod_academicdepartments`, leaving off the env connotation, as we set that in a choice per script, so that you may choose in the script which env to run them on.
+- You should see `@cl.prod_academicdepartments.dev.dev` or `academicdepartments.dev` and `@cl.prod_hud8.dev.dev` or `hud8.dev`, with others for stg and prod installs of each. These would be added as `@cl.prod_academicdepartments`, leaving off the env connotation, as we set that in a choice per script, so that you may choose in the script which env to run them on.
 
 ### Requirements
 
