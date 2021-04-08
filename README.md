@@ -104,7 +104,7 @@ The following full scripts are available:
 
 #### Initial spin-up of a multi-site site, and clone dev.coasdept
 
-- This script creates a new multi-site install locally (copies the _starter_ folder), adjusts settings.php and sites.php with needed parameters, adds connection data to a multi-site DB on acquia, Commits to master, and pushes to Acquia. The script then clones the dev.coasdept.howard.edu DB and Files into it, directly on acquia DEV. A video overview can be seen on [vimeo](https://vimeo.com/400050607/0f830ca20d).
+- This script creates a new multi-site install locally (copies the _starter_ folder), adjusts settings.php and sites.php with needed parameters, adds connection data to a multi-site DB on acquia, Commits to master, and pushes to Acquia. The script then clones the stg.coasdept.howard.edu DB and Files into it, directly on acquia STG. A video overview can be seen on [vimeo](https://vimeo.com/400050607/0f830ca20d).
 
 ##### Manual Steps (to be completed first)
 
@@ -114,7 +114,7 @@ The following full scripts are available:
 
 ##### Automated Steps (done by script after manual steps complete)
 
-You will also be given the option to commit/push immediately, and whether you wish to copy database and files from dev.coasdept.howard. Choosing "NO" on any, will skip these steps, and they will subsequently need to be performed manually. If git automation is not chosen, a new git branch will be created and used locally: "new_howard_multisite_TIMESTAMP".
+You will also be given the option to commit/push immediately, and whether you wish to copy database and files from stg.coasdept.howard. Choosing "NO" on any, will skip these steps, and they will subsequently need to be performed manually. If git automation is not chosen, a new git branch will be created and used locally: "new_howard_multisite_TIMESTAMP".
 
 - Be sure that HAL is up to date.
 - Be sure that all desired local folders, and drush aliases are set up in hal_config.txt.
