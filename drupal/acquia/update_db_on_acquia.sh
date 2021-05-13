@@ -30,7 +30,7 @@ done
 
 for ENV in 'dev' 'test' 'prod'
 do
-  ${LOCAL_DRUSH} $ACQUIA_ENV.$ENV ssh "bash /var/www/html/${AH_SITE_NAME}/scripts/hal_sites.sh updb && exit"
+  ${LOCAL_DRUSH} $ACQUIA_ENV.$ENV ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh updb && exit"
   echo $ACQUIA_ENV.$ENV "Updates complete.";
 done
 
