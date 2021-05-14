@@ -180,6 +180,16 @@ You will also be given the option to commit/push immediately. If git automation 
 - You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
 - `$ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh`
 
+#### List all non admin users on sites.
+
+This script is set to be able to quickly see what non admin users are on all sites in an application. It may be modified in the future to perform more operations. Currently, it uses a script on the hud8, and academicdepartment servers, `/scripts/hal_user_list`. Any modifications to the functionality desired, will likely need to modify those scripts also.
+
+- Be sure that HAL is up to date.
+- Be sure that all desired local drush aliases are set up in hal_config.txt.
+- Be sure all acquia drush aliases are up to date.
+- You may choose either dev, test, or prod, at which point it will list all users, on all multisites, on both hud8 and academicdepartments, for the chosen environment.
+- The script will then list the user id, user name, and email for all non administrator accounts.
+
 ## Roadmap
 
 ### All Howard D8 acquia codebases
@@ -187,3 +197,4 @@ You will also be given the option to commit/push immediately. If git automation 
 - Run composer add on all local codebases. "add the seckit module on all local D8 codebases" **In Progress**
 - Commit and push to DEV for all local codebases
 - Deploy to prod for all codebases
+- You may choose either hud8 or academicdepartments Prod Environment.
