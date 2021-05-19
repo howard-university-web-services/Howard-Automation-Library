@@ -190,6 +190,13 @@ This script is set to be able to quickly see what non admin users are on all sit
 - You may choose either dev, test, or prod, at which point it will list all users, on all multisites, on both hud8 and academicdepartments, for the chosen environment.
 - The script will then list the user id, user name, and email for all non administrator accounts.
 
+## Drupal 7 Legacy
+
+The following scripts exist as a stopgap in order to perform user operations on howard d7 sites.
+
+- Reset password for a user: `sh ~/Sites/_hal/drupal/acquia/d7_reset_password.sh`.
+- Cancel user account: `sh ~/Sites/_hal/drupal/acquia/d7_cancel_user.sh`.
+
 ## Roadmap
 
 ### All Howard D8 acquia codebases
