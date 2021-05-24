@@ -189,6 +189,18 @@ This script is set to be able to quickly see what non admin users are on all sit
 - Be sure all acquia drush aliases are up to date.
 - You may choose either dev, test, or prod, at which point it will list all users, on all multisites, on both hud8 and academicdepartments, for the chosen environment.
 - The script will then list the user id, user name, and email for all non administrator accounts.
+- `$ sh ~/Sites/_hal/drupal/acquia/list_users.sh`
+
+#### List all webforms on sites.
+
+This script is set to be able to quickly see what webforms are on all sites in an application. It may be modified in the future to perform more operations. Currently, it uses a script on the hud8, and academicdepartment servers, `/scripts/hal_webform_list`. Any modifications to the functionality desired, will likely need to modify those scripts also.
+
+- Be sure that HAL is up to date.
+- Be sure that all desired local drush aliases are set up in hal_config.txt.
+- Be sure all acquia drush aliases are up to date.
+- You may choose either dev, test, or prod, at which point it will list all webforms, on all multisites, on both hud8 and academicdepartments, for the chosen environment.
+- The script will then list the webform id.
+- `$ sh ~/Sites/_hal/drupal/acquia/list_webforms.sh`
 
 ## Drupal 7 Legacy
 

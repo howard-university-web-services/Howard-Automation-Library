@@ -2,11 +2,11 @@
 #
 # List non admin users on on all howard D8 Sites.
 #
-# $ sh ~/Sites/_hal/drupal/acquia/list_users.sh
+# $ sh ~/Sites/_hal/drupal/acquia/list_webforms.sh
 #
 # Notes:
 # - See README.md for detailed instructions.
-# - Interacts with /scripts/hal_user_list.sh on the hud8 and ad servers. If updates needed to that script, must be done in both places.
+# - Interacts with /scripts/hal_webform_list.sh on the hud8 and ad servers. If updates needed to that script, must be done in both places.
 #
 # Dependencies:
 # - drush
@@ -15,7 +15,7 @@
 # - none
 #
 
-echo "Listing users for Howard D8 sites."
+echo "Listing webforms for Howard D8 sites."
 
 source ~/Sites/_hal/hal_config.txt
 
@@ -30,8 +30,8 @@ done
 
 # Foreach drush alias, go on the server and set.
 for APP in ${LOCAL_HOWARD_D8_DRUSH_ALIAS[@]}; do
-  echo "Running user lists for $APP$ENV"
-  ${LOCAL_DRUSH} $APP$ENV ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_user_list.sh"
+  echo "Running webform lists for $APP$ENV"
+  ${LOCAL_DRUSH} $APP$ENV ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_webform_list.sh"
 done
 
 echo "drush listing complete on $APP$ENV."
