@@ -209,6 +209,15 @@ The following scripts exist as a stopgap in order to perform user operations on 
 - Reset password for a user: `sh ~/Sites/_hal/drupal/acquia/d7_reset_password.sh`.
 - Cancel user account: `sh ~/Sites/_hal/drupal/acquia/d7_cancel_user.sh`.
 
+## User maintenance
+
+The following is a quick guide to disabling uses across all howard ecosystems, if required.
+
+- For D8 sites, run `sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh`, choose environments, and drush command when prompted: `user:cancel first.last`.
+- For D7 sites, run `sh ~/Sites/_hal/drupal/acquia/d7_cancel_user.sh`, and type in username when prompted, ie `first.last`.
+
+This will block the user account an reassign all content to anon user.
+
 ## Roadmap
 
 ### All Howard D8 acquia codebases

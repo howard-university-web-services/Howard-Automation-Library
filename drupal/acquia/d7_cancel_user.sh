@@ -23,7 +23,7 @@ APPS=("@howard" "@huschools" "@huenterprise" "@huadminunits")
 ENVS=(".dev" ".test" ".prod")
 
 # Username, use as $USERNAME
-echo "Enter the drush command. (e.g. ben.collins):"
+echo "Enter the desired username to cancel. (e.g. ben.collins):"
 read USERNAME
 
 # Check Username is not empty
