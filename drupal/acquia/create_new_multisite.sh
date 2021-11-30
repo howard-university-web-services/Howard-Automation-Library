@@ -22,13 +22,13 @@
 #
 
 echo "This script will create the local sites folder, commit and push to acquia."
-echo "Be sure you are on the correct branch to deploy to DEV env."
+echo "Be sure you are on the correct branch to deploy to STG env."
 
 source ~/Sites/_hal/hal_config.txt
 YES_NO=( "YES" "NO" )
 
 # Acquia ENV to create site on, use as $ACQUIA_ENV
-TO_ACQUIA_ENVS=( "${LOCAL_HOWARD_D8_DRUSH_ALIAS[0]}.test" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[1]}.test" )
+TO_ACQUIA_ENVS=( "${LOCAL_HOWARD_D8_DRUSH_ALIAS[0]}.test" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[1]}.test" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[2]}.test")
 select ACQUIA_ENV in "${TO_ACQUIA_ENVS[@]}"; do
   if [[ -z "$" ]]; then
     printf '"%s" is not a valid choice\n' "$REPLY" >&2
@@ -99,12 +99,15 @@ done
 
 # Move to proper folder
 echo "Moving to proper folder..."
-if [[ $ACQUIA_ENV = "@hud8.test" ]]
+if [[ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[0]}.test" ]]
 then
   cd ${LOCAL_HOWARD_D8_FOLDERS[0]}/docroot/sites
-elif [[ $ACQUIA_ENV = "@academicdepartments.test" ]]
+elif [[ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[1]}.test" ]]
 then
   cd ${LOCAL_HOWARD_D8_FOLDERS[1]}/docroot/sites
+elif [[ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[2]}.test" ]]
+then
+  cd ${LOCAL_HOWARD_D8_FOLDERS[2]}/docroot/sites
 fi
 
 # Check to ensure we are master git branch, and things are up to date.
@@ -185,6 +188,9 @@ then
   elif [ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[1]}.test" ]
   then
     scp -3 -r hud8.test@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.test/sites/coasdept.howard.edu/files academicdepartments.test@staging-14271.prod.hosting.acquia.com:/mnt/files/academicdepartments.test/sites/$SITE_NAME
+  elif [ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[2]}.test" ]
+  then
+    scp -3 -r hud8.test@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.test/sites/coasdept.howard.edu/files howardenterprise.test@staging-14271.prod.hosting.acquia.com:/mnt/files/howardenterprise.test/sites/$SITE_NAME
   fi
 else
   echo "Copy files skipped. New site will not have starter images/etc."

@@ -26,6 +26,7 @@ Clone this repo into your ~/Sites folder, as "_hal"
 
 - LOCAL_HOWARD_D8_FOLDERS[0] = Your local hud8 root folder.
 - LOCAL_HOWARD_D8_FOLDERS[1] = Your local academicdepartments root folder.
+- LOCAL_HOWARD_D8_FOLDERS[2] = Your local howardenterprise root folder.
 - Navigate to your DevDesktop sites folder.
 - Find the folder you wish to use, ie "hud8-dev"
 - `cd hud8-dev`
@@ -36,6 +37,9 @@ Clone this repo into your ~/Sites folder, as "_hal"
 
 - Run `drush sa` for a list of current drush aliases.
 - You should see `@cl.prod_academicdepartments.dev.dev` or `academicdepartments.dev` and `@cl.prod_hud8.dev.dev` or `hud8.dev`, with others for stg and prod installs of each. These would be added as `@cl.prod_academicdepartments`, leaving off the env connotation, as we set that in a choice per script, so that you may choose in the script which env to run them on.
+- LOCAL_HOWARD_D8_DRUSH_ALIAS[0] = Your local hud8 alias.
+- LOCAL_HOWARD_D8_DRUSH_ALIAS[1] = Your local academicdepartments alias.
+- LOCAL_HOWARD_D8_DRUSH_ALIAS[2] = Your local howardenterprise alias.
 
 ### Requirements
 

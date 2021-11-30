@@ -1,0 +1,4 @@
+name: howard-automation-library
+recipe: lamp
+config:
+  webroot: .
