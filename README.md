@@ -7,7 +7,7 @@ This repo holds bash scripts and other files to help in the automation of Howard
 Clone this repo into your ~/Sites folder, as "_hal"
 
 - `$ cd ~/Sites`
-- `$ git clone https://https://github.com/howard-university-web-services/Howard-Automation-Library.git _hal`
+- `$ git clone https://github.com/howard-university-web-services/Howard-Automation-Library.git _hal`
 
 ### Add Local Config
 
