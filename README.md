@@ -45,8 +45,7 @@ Clone this repo into your ~/Sites folder, as "_hal"
 
 Be sure the following are up and running correctly on your local machine:
 
-- [Acquia DevDesktop](https://www.acquia.com/drupal/acquia-dev-desktop)
-- [Drush](https://docs.drush.org/en/master/install/) -- Already present if using DevDesktop
+- [Drush](https://docs.drush.org/en/master/install/)
 
 ## Updating HAL
 
