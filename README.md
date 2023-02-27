@@ -20,7 +20,7 @@ Clone this repo into your ~/Sites folder, as "_hal"
 #### Setting a local drush
 
 - Navigate to the Drush 9 installed in the hud8 folder as a dependency, and adjust the path to match your local machine in config.
-- `LOCAL_DRUSH="/Users/YOUR_USER/Sites/devdesktop/hud8-dev/docroot/vendor/bin/drush"`
+- `LOCAL_DRUSH="/Users/YOUR_USER/Sites/lando/hud8-dev/docroot/vendor/bin/drush"`
 
 #### Finding your local Howard D8 folders
 
@@ -45,7 +45,7 @@ Clone this repo into your ~/Sites folder, as "_hal"
 
 Be sure the following are up and running correctly on your local machine:
 
-- [Acquia DevDesktop](https://www.acquia.com/drupal/acquia-dev-desktop)
+- [Lando](https://docs.lando.dev/drupal/)
 - [Drush](https://docs.drush.org/en/master/install/) -- Already present if using DevDesktop
 
 ## Updating HAL
@@ -94,13 +94,13 @@ Since drush 9 and above does away with the @sites alias, we needed to create a s
 
 ### Usage of server hal_sites.sh
 
-When running this script, 'drush' and the '-y' flag, are automatically added to the drush command you wish to run. It is quite important to "not use command aliases" with this script. Ie, use "pm:enable" not "en". Related too [this issue](https://github.com/drush-ops/drush/issues/3025) if curious as to why.
+When running this script, 'drush' and the '-y' flag, are automatically added to the drush command you wish to run. It is quite important to "not use command aliases" with this script. e.g. use "pm:enable" not "en". Related too [this issue](https://github.com/drush-ops/drush/issues/3025) if curious as to why.
 
 - From root folder on acquia server, check status: `bash scripts/hal_sites.sh status`. In this instance, 'status' is the drush command to run.
 - From root folder on acquia server, clear cache: `bash scripts/hal_sites.sh cr`. In this instance, 'cr' is the drush command to run.
 - From scheduled task runner on acquia: `bash /var/www/html/${AH_SITE_NAME}/scripts/hal_sites.sh cr`. Clears caches on all sites in install, to run hourly or whatever desired.
 
-## Drupal 8
+## Drupal 9
 
 The following full scripts are available:
 
@@ -127,7 +127,7 @@ You will also be given the option to commit/push immediately, and whether you wi
 - You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
 - `$ sh ~/Sites/_hal/drupal/acquia/create_new_multisite.sh`
 
-#### Update all Howard packagist repos, on all Howard D8 sites, commit, and push to acquia
+#### Update all Howard packagist repos, on all Howard D9 sites, commit, and push to acquia
 
 You will also be given the option to commit/push immediately. If git automation is not chosen, a new git branch will be created and used locally: "new_howard_multisite_TIMESTAMP".
 
@@ -163,7 +163,7 @@ You will also be given the option to commit/push immediately. If git automation 
 - Add the desired command only, ie "pm-uninstall page_cache", as things like "drush" and "@sites" are added by the script.
 - `$ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh`
 
-#### Update database on all acquia D8 sites
+#### Update database on all acquia D9 sites
 
 - Be sure that HAL is up to date.
 - Be sure that all desired local drush aliases are set up in hal_config.txt.
