@@ -19,7 +19,7 @@ source ~/Sites/_hal/hal_config.txt
 
 #Select desired Acquia Enviroment
 echo "Select a Acquia Enviroment"
-TO_ACQUIA_ENVS=( "@hud8" "@academicdepartments" )
+TO_ACQUIA_ENVS=( "@hud8" "@academicdepartments" "@howardenterprise" "@centers" "@uxws" )
 select ACQUIA_ENV in "${TO_ACQUIA_ENVS[@]}"; do
   if [[ -z "$" ]]; then
     printf '"%s" is not a valid choice\n' "$REPLY" >&2
@@ -35,6 +35,15 @@ then
 elif [ $ACQUIA_ENV = "@academicdepartments" ]
 then
   cd ${LOCAL_HOWARD_D8_FOLDERS[1]}
+elif [ $ACQUIA_ENV = "@howardenterprise" ]
+then
+  cd ${LOCAL_HOWARD_D8_FOLDERS[2]}
+elif [ $ACQUIA_ENV = "@centers" ]
+then
+  cd ${LOCAL_HOWARD_D8_FOLDERS[3]}
+elif [ $ACQUIA_ENV = "@uxws" ]
+then
+  cd ${LOCAL_HOWARD_D8_FOLDERS[4]}
 fi
 
 echo 'Creating new tag on the master branch'

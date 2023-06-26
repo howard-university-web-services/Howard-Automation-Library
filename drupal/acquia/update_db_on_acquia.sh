@@ -19,7 +19,7 @@ echo "This script will update all databases on the specified Acquia environments
 source ~/Sites/_hal/hal_config.txt
 
 # Acquia ENV to create site on, use as $ACQUIA_ENV
-TO_ACQUIA_ENVS=( "${LOCAL_HOWARD_D8_DRUSH_ALIAS[0]}" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[1]}" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[2]}")
+TO_ACQUIA_ENVS=( "${LOCAL_HOWARD_D8_DRUSH_ALIAS[0]}" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[1]}" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[2]}" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[3]}" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[4]}")
 select ACQUIA_ENV in "${TO_ACQUIA_ENVS[@]}"; do
   if [[ -z "$" ]]; then
     printf '"%s" is not a valid choice\n' "$REPLY" >&2

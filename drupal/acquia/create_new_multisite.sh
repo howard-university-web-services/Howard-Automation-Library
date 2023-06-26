@@ -28,7 +28,7 @@ source ~/Sites/_hal/hal_config.txt
 YES_NO=( "YES" "NO" )
 
 # Acquia ENV to create site on, use as $ACQUIA_ENV
-TO_ACQUIA_ENVS=( "${LOCAL_HOWARD_D8_DRUSH_ALIAS[0]}.test" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[1]}.test" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[2]}.test")
+TO_ACQUIA_ENVS=( "${LOCAL_HOWARD_D8_DRUSH_ALIAS[0]}.test" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[1]}.test" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[2]}.test" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[3]}.test" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[4]}.test")
 select ACQUIA_ENV in "${TO_ACQUIA_ENVS[@]}"; do
   if [[ -z "$" ]]; then
     printf '"%s" is not a valid choice\n' "$REPLY" >&2
@@ -108,6 +108,12 @@ then
 elif [[ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[2]}.test" ]]
 then
   cd ${LOCAL_HOWARD_D8_FOLDERS[2]}/docroot/sites
+elif [[ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[3]}.test" ]]
+then
+  cd ${LOCAL_HOWARD_D8_FOLDERS[3]}/docroot/sites
+elif [[ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[4]}.test" ]]
+then
+  cd ${LOCAL_HOWARD_D8_FOLDERS[4]}/docroot/sites
 fi
 
 # Check to ensure we are master git branch, and things are up to date.
@@ -191,6 +197,12 @@ then
   elif [ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[2]}.test" ]
   then
     scp -3 -r hud8.test@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.test/sites/coasdept.howard.edu/files howardenterprise.test@staging-14271.prod.hosting.acquia.com:/mnt/files/howardenterprise.test/sites/$SITE_NAME
+  elif [ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[3]}.test" ]
+  then
+    scp -3 -r hud8.test@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.test/sites/coasdept.howard.edu/files centers.test@staging-14271.prod.hosting.acquia.com:/mnt/files/centers.test/sites/$SITE_NAME
+  elif [ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[4]}.test" ]
+  then
+    scp -3 -r hud8.test@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.test/sites/coasdept.howard.edu/files uxws.test@staging-14271.prod.hosting.acquia.com:/mnt/files/uxws.test/sites/$SITE_NAME
   fi
 else
   echo "Copy files skipped. New site will not have starter images/etc."
