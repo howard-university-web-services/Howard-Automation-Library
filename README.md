@@ -20,18 +20,20 @@ Clone this repo into your ~/Sites folder, as "_hal"
 #### Setting a local drush
 
 - Navigate to the Drush 9 installed in the hud8 folder as a dependency, and adjust the path to match your local machine in config.
-- `LOCAL_DRUSH="/Users/YOUR_USER/Sites/devdesktop/hud8-dev/docroot/vendor/bin/drush"`
+- `LOCAL_DRUSH="/Users/YOUR_USER/Sites/hud8/docroot/vendor/bin/drush"`
 
 #### Finding your local Howard D8 folders
 
 - LOCAL_HOWARD_D8_FOLDERS[0] = Your local hud8 root folder.
 - LOCAL_HOWARD_D8_FOLDERS[1] = Your local academicdepartments root folder.
 - LOCAL_HOWARD_D8_FOLDERS[2] = Your local howardenterprise root folder.
+- LOCAL_HOWARD_D8_FOLDERS[3] = Your local centers root folder.
+- LOCAL_HOWARD_D8_FOLDERS[4] = Your local uxws root folder.
 - Navigate to your DevDesktop sites folder.
-- Find the folder you wish to use, ie "hud8-dev"
-- `cd hud8-dev`
-- `pwd`: The out put of this would go into hal_config.txt as `LOCAL_HOWARD_D8_FOLDERS[0]="/PATH/TO/YOUR/FOLDER/hud8-dev"` (NOTICE THE "0" HERE).
-- Subsequent paths, Academic Departments,for additional Howard D8 environments you wish to update would go into hal_config.txt as `LOCAL_HOWARD_D8_FOLDERS[1]="/PATH/TO/YOUR/OTHER/FOLDER/academicdepartments-dev"` (NOTICE THE "1" HERE).
+- Find the folder you wish to use, ie "hud8"
+- `cd hud8`
+- `pwd`: The out put of this would go into hal_config.txt as `LOCAL_HOWARD_D8_FOLDERS[0]="/PATH/TO/YOUR/FOLDER/hud8"` (NOTICE THE "0" HERE).
+- Subsequent paths, Academic Departments,for additional Howard D8 environments you wish to update would go into hal_config.txt as `LOCAL_HOWARD_D8_FOLDERS[1]="/PATH/TO/YOUR/OTHER/FOLDER/academicdepartments"` (NOTICE THE "1" HERE).
 
 #### Finding your local drush aliases
 
@@ -40,6 +42,8 @@ Clone this repo into your ~/Sites folder, as "_hal"
 - LOCAL_HOWARD_D8_DRUSH_ALIAS[0] = Your local hud8 alias.
 - LOCAL_HOWARD_D8_DRUSH_ALIAS[1] = Your local academicdepartments alias.
 - LOCAL_HOWARD_D8_DRUSH_ALIAS[2] = Your local howardenterprise alias.
+- LOCAL_HOWARD_D8_DRUSH_ALIAS[3] = Your local centers alias.
+- LOCAL_HOWARD_D8_DRUSH_ALIAS[4] = Your local uxws alias.
 
 ### Requirements
 
