@@ -9,6 +9,7 @@ Clone this repo into your ~/Sites folder, as "_hal"
 - `$ cd ~/Sites`
 - `$ git clone https://github.com/howard-university-web-services/Howard-Automation-Library.git _hal`
 
+
 ### Add Local Config
 
 - `$ cd ~/Sites/_hal`
@@ -20,7 +21,7 @@ Clone this repo into your ~/Sites folder, as "_hal"
 #### Setting a local drush
 
 - Navigate to the Drush 9 installed in the hud8 folder as a dependency, and adjust the path to match your local machine in config.
-- `LOCAL_DRUSH="/Users/YOUR_USER/Sites/lando/hud8-dev/docroot/vendor/bin/drush"`
+- `LOCAL_DRUSH="/PATH/TO/YOUR/FOLDER/hud8/vendor/bin/drush"`
 
 #### Finding your local Howard D8 folders
 

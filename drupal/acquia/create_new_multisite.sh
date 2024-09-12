@@ -190,19 +190,19 @@ then
   echo "copying files..."
   if [ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[0]}.test" ]
   then
-    scp -3 -r hud8.test@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.test/sites/coasdept.howard.edu/files hud8.test@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.test/sites/$SITE_NAME
+    scp -3 -r hud8.test@hud8stg.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/coasdept.howard.edu/files hud8.test@hud8stg.ssh.prod.acquia-sites.com:/mnt/files/hud8.test/sites/$SITE_NAME
   elif [ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[1]}.test" ]
   then
-    scp -3 -r hud8.test@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.test/sites/coasdept.howard.edu/files academicdepartments.test@staging-14271.prod.hosting.acquia.com:/mnt/files/academicdepartments.test/sites/$SITE_NAME
+    scp -3 -r hud8.test@hud8stg.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/coasdept.howard.edu/files academicdepartments.test@academicdepartmentsstg.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/$SITE_NAME
   elif [ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[2]}.test" ]
   then
-    scp -3 -r hud8.test@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.test/sites/coasdept.howard.edu/files howardenterprise.test@staging-14271.prod.hosting.acquia.com:/mnt/files/howardenterprise.test/sites/$SITE_NAME
+    scp -3 -r hud8.test@hud8stg.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/coasdept.howard.edu/files howardenterprise.test@howardenterprisestg.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/$SITE_NAME
   elif [ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[3]}.test" ]
   then
-    scp -3 -r hud8.test@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.test/sites/coasdept.howard.edu/files centers.test@staging-14271.prod.hosting.acquia.com:/mnt/files/centers.test/sites/$SITE_NAME
+    scp -3 -r hud8.test@hud8stg.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/coasdept.howard.edu/files centers.test@centerstest.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/$SITE_NAME
   elif [ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[4]}.test" ]
   then
-    scp -3 -r hud8.test@staging-14271.prod.hosting.acquia.com:/mnt/files/hud8.test/sites/coasdept.howard.edu/files uxws.test@staging-14271.prod.hosting.acquia.com:/mnt/files/uxws.test/sites/$SITE_NAME
+    scp -3 -r hud8.test@hud8stg.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/coasdept.howard.edu/files uxws.stage@uxwsstage.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/$SITE_NAME
   fi
 else
   echo "Copy files skipped. New site will not have starter images/etc."
