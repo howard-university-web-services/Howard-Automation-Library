@@ -1,34 +1,32 @@
 #!/bin/bash
 #
-# Update specific config on all howard D8 Sites.
+# Update specific config on Howard D8 Sites.
 #
 # $ sh ~/Sites/_hal/drupal/acquia/update_config.sh
 #
 # Notes:
 # - See README.md for detailed instructions.
 # - See https://drushcommands.com/drush-8x/config/config-set/
+# - Precise application and environment targeting
 #
 # Dependencies:
 # - drush
 #
-# Paramaters:
+# Parameters:
+# - Application | Choose which Howard application
+# - Environment | Choose which environment (dev/test/prod)
 # - Config Name | ie, system.site
 # - Config Key | ie, page.front
 # - Config Value | ie, node/123
 #
 
-echo "Updating custom config for Howard D8 sites."
+echo "Updating custom config for a specific Howard D8 site and environment."
 
 source ~/Sites/_hal/hal_config.txt
+source ~/Sites/_hal/drupal/acquia/partials/select_app_and_env.sh
 
-# Choose acquia env for drush aliases
-echo "Please choose which acquia env to run this on:"
-ENVS=(".dev.dev" ".test.test" ".prod.prod")
-select ENV in "${ENVS[@]}"
-do
-  echo "$ENV selected"
-  break
-done
+# Use the standardized selection function
+select_app_and_env
 
 # Config Name, use as $CONFIG_NAME
 echo "Enter the Config Name. (e.g. system.site):"
@@ -60,12 +58,12 @@ if [ -z "$CONFIG_VALUE" ]; then
   exit 2
 fi
 
-# Foreach drush alias, go on the server and set.
-for APP in ${LOCAL_HOWARD_D8_DRUSH_ALIAS[@]}; do
-  echo "Running config updates for $APP$ENV"
-  ${LOCAL_DRUSH} $APP$ENV ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh cset $CONFIG_NAME $CONFIG_KEY $CONFIG_VALUE"
-done
+echo "Running config updates for $FULL_ALIAS"
+echo "Setting $CONFIG_NAME:$CONFIG_KEY to '$CONFIG_VALUE'"
 
-echo "Config updates complete."
+# Run the update on the specific application and environment
+${LOCAL_DRUSH} $FULL_ALIAS ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh config:set $CONFIG_NAME $CONFIG_KEY '$CONFIG_VALUE'"
+
+echo "Config update complete on $FULL_ALIAS."
 
 exit 0

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# This script creates a new tag and deploys it to either HUD8 or Academic Departments Acquia Prod environments.
+# This script creates a new tag and deploys it to Howard Acquia environments.
 
 # $ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh
 #
@@ -10,41 +10,22 @@
 # Dependencies:
 # - Drush: https://www.drush.org/
 #
-# Paramaters:
-# - Acquia Env | The environment to create the site on
+# Parameters:
+# - Application | The Howard application to deploy to
+# - Environment | The environment to deploy to (dev, test, prod)
 # - E-mail | Acquia E-mail
 # - Private Key | Acquia private key
 
 source ~/Sites/_hal/hal_config.txt
+source ~/Sites/_hal/drupal/acquia/partials/select_app_and_env.sh
 
-#Select desired Acquia Enviroment
-echo "Select a Acquia Enviroment"
-TO_ACQUIA_ENVS=( "@hud8" "@academicdepartments" "@howardenterprise" "@centers" "@uxws" )
-select ACQUIA_ENV in "${TO_ACQUIA_ENVS[@]}"; do
-  if [[ -z "$" ]]; then
-    printf '"%s" is not a valid choice\n' "$REPLY" >&2
-  else
-    break
-  fi
-done
+# Use standardized app and environment selection
+echo "Code deployment for Howard D8 sites."
+select_app_and_env
 
-#select dev docroot folder
-if [ $ACQUIA_ENV = "@hud8" ]
-then
-  cd ${LOCAL_HOWARD_D8_FOLDERS[0]}
-elif [ $ACQUIA_ENV = "@academicdepartments" ]
-then
-  cd ${LOCAL_HOWARD_D8_FOLDERS[1]}
-elif [ $ACQUIA_ENV = "@howardenterprise" ]
-then
-  cd ${LOCAL_HOWARD_D8_FOLDERS[2]}
-elif [ $ACQUIA_ENV = "@centers" ]
-then
-  cd ${LOCAL_HOWARD_D8_FOLDERS[3]}
-elif [ $ACQUIA_ENV = "@uxws" ]
-then
-  cd ${LOCAL_HOWARD_D8_FOLDERS[4]}
-fi
+# Navigate to the selected application's local folder
+LOCAL_FOLDER=$(get_local_folder_for_app "$SELECTED_APP")
+cd "$LOCAL_FOLDER"
 
 echo 'Creating new tag on the master branch'
 
@@ -74,4 +55,5 @@ else
   git push origin --tags
 fi
 
-${LOCAL_DRUSH} @hud8.prod ssh "drush $ACQUIA_ENV.prod ac-code-path-deploy tags/${TAG} --email=${ACQUIA_EMAIL} --key=${ACQUIA_PRIVATE_KEY} && exit"
+echo "Deploying tag ${TAG} to ${FULL_ALIAS}..."
+${LOCAL_DRUSH} ${SELECTED_APP}.prod ssh "drush ${FULL_ALIAS} ac-code-path-deploy tags/${TAG} --email=${ACQUIA_EMAIL} --key=${ACQUIA_PRIVATE_KEY} && exit"

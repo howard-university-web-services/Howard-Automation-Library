@@ -1,22 +1,72 @@
 # Howard Automation Library (HAL)
 
-This repo holds bash scripts and other files to help in the automation of Howard University Drupal projects.
+The Howard Automation Library (HAL) is a comprehensive collection of bash scripts and automation tools designed to streamline the management of Howard University's Drupal applications across multiple Acquia Cloud environments.
+
+## Overview
+
+HAL provides standardized, interactive scripts for managing five Howard University Drupal applications:
+- **@hud8** - Main Howard University site
+- **@academicdepartments** - Academic department sites  
+- **@howardenterprise** - Enterprise sites
+- **@centers** - Center and institute sites
+- **@uxws** - UX/Web Services sites
+
+All scripts feature a consistent, user-friendly interface with flexible targeting options and built-in safety confirmations.
+
+## Quick Reference
+
+### Most Common Commands
+
+```bash
+# Universal drush command runner (cache rebuild, module enable, etc.)
+$ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh
+
+# Update configuration values (site settings, etc.)  
+$ sh ~/Sites/_hal/drupal/acquia/update_config.sh
+
+# Run database updates after code deployments
+$ sh ~/Sites/_hal/drupal/acquia/update_db_on_acquia.sh
+
+# Deploy code to production environments
+$ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh
+```
+
+### Targeting Options (Available in All Scripts)
+
+1. **Single App + Single Env** → Precise targeting (e.g., @hud8 dev only)
+2. **Single App + All Envs** → App-wide (e.g., @hud8 across dev/test/prod)  
+3. **All Apps + Single Env** → Environment-wide (e.g., all apps on test)
+4. **All Apps + All Envs** → System-wide (use with extreme caution)
 
 ## Installation
 
-Clone this repo into your ~/Sites folder, as "_hal"
+### 1. Clone Repository
 
-- `$ cd ~/Sites`
-- `$ git clone https://github.com/howard-university-web-services/Howard-Automation-Library.git _hal`
+Clone this repo into your ~/Sites folder as "_hal":
+
+```bash
+cd ~/Sites
+git clone https://github.com/howard-university-web-services/Howard-Automation-Library.git _hal
+```
 
 
-### Add Local Config
+### 2. Configure Local Settings
 
-- `$ cd ~/Sites/_hal`
-- `$ cp hal_config.default.txt hal_config.txt`
-- Edit hal_config.txt to use the desired drush.
-- Edit hal_config.txt to use the absolute path to any local Howard D8 repos you wish to update/use.
-- Edit hal_config.txt to use the local drush aliases you have.
+Create and customize your local configuration:
+
+```bash
+cd ~/Sites/_hal
+cp hal_config.default.txt hal_config.txt
+```
+
+Edit `hal_config.txt` to configure:
+
+- **Local Drush Installation** - Path to your Drush executable
+- **Howard D8 Folder Paths** - Absolute paths to your local Howard application folders  
+- **Drush Aliases** - Your local Acquia Cloud drush aliases
+- **Acquia Credentials** - Your Acquia email and private key for deployments
+
+### 3. Configuration Details
 
 #### Setting a local drush
 
@@ -61,9 +111,91 @@ Use git to keep this library up date on your local machine.
 
 ## Usage
 
-- Ensure you are in the proper folder, if the script requires it, especially for partials
-- `$ sh your_desired_script.sh`
-- Do not use sudo
+### Basic Script Execution
+
+```bash
+# Navigate to HAL directory (recommended)
+cd ~/Sites/_hal
+
+# Run any HAL script
+sh ./drupal/acquia/script_name.sh
+
+# Or run from anywhere with full path
+sh ~/Sites/_hal/drupal/acquia/script_name.sh
+```
+
+### Best Practices
+
+- ✅ **Always test first** - Use dev environment before test/prod
+- ✅ **Review targeting** - Double-check your scope selection before confirming
+- ✅ **Single operations** - Prefer precise targeting over system-wide updates  
+- ✅ **Keep HAL updated** - Run `git pull` regularly to get latest improvements
+- ✅ **Monitor output** - Watch for errors or unexpected behavior
+- ❌ **Never use sudo** - Scripts should run with your user permissions
+
+### Safety Features
+
+All HAL scripts include built-in safety measures:
+
+- **Interactive Confirmation** - Scripts show what they will do and ask for confirmation
+- **Clear Targeting Display** - See exactly which apps/environments will be affected
+- **Input Validation** - Invalid selections are caught and rejected
+- **Progress Feedback** - Real-time status updates during execution
+
+### Troubleshooting
+
+**Script fails to select application:**
+- Check that `LOCAL_HOWARD_D8_FOLDERS` paths exist in `hal_config.txt`
+- Verify folders are accessible and contain valid Drupal installations
+
+**Drush commands fail:**
+- Verify `LOCAL_DRUSH` path is correct in `hal_config.txt`
+- Check that drush aliases are properly configured with `drush sa`
+
+**Git operations fail:**
+- Ensure you're on the master branch and it's up to date
+- Check that you have proper permissions to push to the repository
+
+**Acquia deployments fail:**
+- Verify `ACQUIA_EMAIL` and `ACQUIA_PRIVATE_KEY` are set correctly
+- Check that you have deployment permissions for the target environment
+
+## Architecture
+
+### Standardized Selection System
+
+HAL uses a modular architecture with a shared selection component (`partials/select_app_and_env.sh`) that provides consistent targeting across all scripts. This ensures:
+
+- **Unified Interface** - All scripts use the same selection menus and terminology
+- **Flexible Targeting** - Four targeting patterns cover all operational needs
+- **Code Reusability** - Selection logic is centralized and maintained in one place
+- **Consistent Safety** - All scripts inherit the same confirmation and validation patterns
+
+### Application Mapping
+
+HAL automatically maps application selections to local folders and Acquia aliases:
+
+| Application | Local Folder Index | Typical Use Case |
+|-------------|-------------------|------------------|
+| @hud8 | LOCAL_HOWARD_D8_FOLDERS[0] | Main university site |
+| @academicdepartments | LOCAL_HOWARD_D8_FOLDERS[1] | Department sites |
+| @howardenterprise | LOCAL_HOWARD_D8_FOLDERS[2] | Enterprise/business sites |
+| @centers | LOCAL_HOWARD_D8_FOLDERS[3] | Centers and institutes |
+| @uxws | LOCAL_HOWARD_D8_FOLDERS[4] | UX/Web Services sites |
+
+### Environment Structure
+
+Each Howard application has three environments:
+- **dev** - Development environment for testing
+- **test** - Staging environment for client review
+- **prod** - Production environment serving live traffic
+
+### Script Categories
+
+1. **Core Automation Scripts** - Daily operational tasks (update_via_drush.sh, update_config.sh, etc.)
+2. **Deployment Scripts** - Code and database deployments (acquia_code_deploy.sh, update_db_on_acquia.sh)
+3. **Information Scripts** - Data gathering and reporting (list_users.sh, list_webforms.sh, etc.)
+4. **Legacy Scripts** - Drupal 7 maintenance and specialized tasks
 
 ## How this interacts with the acquia server
 
@@ -104,11 +236,123 @@ When running this script, 'drush' and the '-y' flag, are automatically added to 
 - From root folder on acquia server, clear cache: `bash scripts/hal_sites.sh cr`. In this instance, 'cr' is the drush command to run.
 - From scheduled task runner on acquia: `bash /var/www/html/${AH_SITE_NAME}/scripts/hal_sites.sh cr`. Clears caches on all sites in install, to run hourly or whatever desired.
 
-## Drupal 9
+## Core HAL Scripts
 
-The following full scripts are available:
+### Standardized Targeting System
 
-### Acquia
+All HAL scripts now use a consistent, standardized interface for targeting Howard applications and environments. Every script offers four flexible targeting options:
+
+1. **Single Application + Single Environment** - Precise targeting for specific tasks
+2. **Single Application + All Environments** - Application-wide updates (dev, test, prod)  
+3. **All Applications + Single Environment** - Environment-wide updates across all apps
+4. **All Applications + All Environments** - System-wide updates (use with caution)
+
+Each script includes:
+- ✅ **Interactive Selection** - Clear menus for choosing scope
+- ✅ **Confirmation Prompts** - Safety checks before execution
+- ✅ **Clear Feedback** - Shows exactly what will be targeted
+- ✅ **Error Handling** - Validates selections and provides helpful messages
+
+### Main Automation Scripts
+
+#### `update_via_drush.sh` - Universal Drush Command Runner
+
+**Purpose**: Execute any drush command with flexible targeting across Howard applications and environments.
+
+**Features**:
+- All four targeting options available
+- Safety confirmation before execution  
+- Supports any valid drush command
+- Clear feedback on what will be targeted
+
+**Usage**:
+```bash
+$ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh
+# Choose targeting scope (1-4)
+# Select application(s) and environment(s)
+# Enter drush command (e.g., "cr" for cache rebuild)
+# Confirm execution
+```
+
+**Examples**:
+- Cache rebuild on single site: Choose option 1, @hud8, dev, command: `cr`
+- Enable module system-wide: Choose option 4, command: `pm:enable page_cache`
+- Update database on one app: Choose option 2, @academicdepartments, command: `updb`
+
+#### `update_config.sh` - Precise Configuration Updates
+
+**Purpose**: Update specific configuration values on targeted Howard sites using `drush config:set`.
+
+**Features**:
+- All four targeting options available
+- Interactive prompts for config name, key, and value
+- Confirmation before applying changes
+- Supports any valid Drupal configuration
+
+**Usage**:
+```bash
+$ sh ~/Sites/_hal/drupal/acquia/update_config.sh  
+# Choose targeting scope
+# Select application(s) and environment(s)
+# Enter config name (e.g., "system.site")
+# Enter config key (e.g., "page.front") 
+# Enter new value (e.g., "/node/123")
+# Confirm execution
+```
+
+**Examples**:
+- Set front page on single site: Choose option 1, target specific app+env
+- Update site name across all environments: Choose option 2, single app + all envs
+- Change maintenance mode system-wide: Choose option 4, all apps + all envs
+
+#### `update_db_on_acquia.sh` - Database Updates
+
+**Purpose**: Run database updates (`drush updb`) with flexible targeting options.
+
+**Features**:
+- All four targeting options available
+- Safety confirmation before execution
+- Clear progress feedback
+- Handles multiple environments efficiently
+
+**Usage**:
+```bash
+$ sh ~/Sites/_hal/drupal/acquia/update_db_on_acquia.sh
+# Choose targeting scope
+# Select application(s) and environment(s)  
+# Confirm execution
+```
+
+**Examples**:
+- Update single environment: Choose option 3, select test environment
+- Update single app across all environments: Choose option 2, select @hud8
+- Emergency system-wide update: Choose option 4 (use with extreme caution)
+
+#### `acquia_code_deploy.sh` - Code Deployment
+
+**Purpose**: Create Git tags and deploy code to specific Acquia environments.
+
+**Features**:
+- Standardized app and environment selection
+- Automatic tag creation with date versioning
+- Git operations (pull, push, tag push)
+- Direct deployment to selected environment
+
+**Usage**:
+```bash
+$ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh
+# Select application (@hud8, @academicdepartments, etc.)
+# Select environment (dev, test, prod)
+# Script creates tag and deploys automatically
+```
+
+**Process**:
+1. Navigates to selected application's local folder
+2. Creates date-based Git tag (e.g., `2025-10-17` or `2025-10-17.1` if tag exists)
+3. Pulls latest master, pushes master and tags
+4. Deploys tag to selected Acquia environment
+
+### Legacy and Utility Scripts
 
 #### Initial spin-up of a multi-site site, and clone dev.coasdept
 
