@@ -11,7 +11,26 @@ HAL provides standardized, interactive scripts for managing five Howard Universi
 - **@centers** - Center and institute sites
 - **@uxws** - UX/Web Services sites
 
-All scripts feature a consistent, user-friendly interface with flexible targeting options and built-in safety confirmations.
+All scripts feature a consistent, user-friendly interface with flexible targeting options and built-in safety confirmations. HAL includes enhanced support for Drupal 11 with specialized scripts for managing deprecated modules and database compatibility issues.
+
+## Changelog
+
+### Version 2.1.0 (October 2024)
+
+**🚀 Drupal 11 Compatibility Enhancements**
+- **NEW**: `remove_deprecated_modules.sh` - Automated cleanup of deprecated module database references
+- **IMPROVED**: Enhanced error handling for missing module files during upgrades
+- **IMPROVED**: Better support for Drupal 11 core changes and module deprecations
+
+**🔧 Architecture Improvements**
+- **ENHANCED**: Standardized targeting system across all scripts
+- **ENHANCED**: Improved error handling and safety confirmations
+- **ENHANCED**: Better progress feedback and user experience
+
+**📚 Documentation Updates**
+- **UPDATED**: Comprehensive script documentation with usage examples
+- **ADDED**: Troubleshooting section for common issues
+- **IMPROVED**: Installation and configuration instructions
 
 ## Quick Reference
 
@@ -26,6 +45,9 @@ $ sh ~/Sites/_hal/drupal/acquia/update_config.sh
 
 # Run database updates after code deployments
 $ sh ~/Sites/_hal/drupal/acquia/update_db_on_acquia.sh
+
+# Clean up deprecated module database references (Drupal 11 compatibility)
+$ sh ~/Sites/_hal/drupal/acquia/remove_deprecated_modules.sh
 
 # Deploy code to production environments
 $ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh
@@ -351,6 +373,39 @@ $ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh
 2. Creates date-based Git tag (e.g., `2025-10-17` or `2025-10-17.1` if tag exists)
 3. Pulls latest master, pushes master and tags
 4. Deploys tag to selected Acquia environment
+
+#### `remove_deprecated_modules.sh` - Deprecated Module Database Cleanup
+
+**Purpose**: Clean up deprecated module database references for Drupal 11 compatibility. Removes lingering database entries for modules like ckeditor, mysql57, tour, seven, and ckeditor_lts that are no longer in the codebase.
+
+**Features**:
+- All four targeting options available
+- Cleans up system.schema entries for deprecated modules
+- Removes configuration entries for deprecated modules
+- Safe execution with error handling for missing tables
+- Cache clearing after cleanup
+
+**Usage**:
+```bash
+$ sh ~/Sites/_hal/drupal/acquia/remove_deprecated_modules.sh
+# Choose targeting scope
+# Select application(s) and environment(s)
+# Review modules to be cleaned up
+# Confirm execution
+```
+
+**What it cleans**:
+- `ckeditor` - Legacy CKEditor module (replaced by CKEditor 5)
+- `mysql57` - MySQL driver compatibility module
+- `tour` - Removed from Drupal 11 core
+- `seven` - Legacy admin theme
+- `ckeditor_lts` - CKEditor LTS version
+
+**Use cases**:
+- After Drupal 11 upgrades to clean up legacy module references
+- When sites show "module missing" warnings for deprecated modules
+- Preparing sites for production deployment after major upgrades
+- Troubleshooting bootstrap issues caused by missing module files
 
 ### Legacy and Utility Scripts
 
