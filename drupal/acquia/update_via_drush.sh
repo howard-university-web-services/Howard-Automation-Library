@@ -92,6 +92,7 @@ for APP in "${TARGET_APPS[@]}"; do
         echo ""
         echo "Running on $FULL_ALIAS..."
         ${LOCAL_DRUSH} $FULL_ALIAS ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh $DRUSH_COMMAND"
+        ${LOCAL_DRUSH} $FULL_ALIAS ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh maint:set 0"
         echo "✓ Completed on $FULL_ALIAS"
     done
 done

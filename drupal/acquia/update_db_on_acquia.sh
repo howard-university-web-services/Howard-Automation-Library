@@ -84,7 +84,8 @@ for APP in "${TARGET_APPS[@]}"; do
         FULL_ALIAS="$APP.$ENV"
         echo ""
         echo "🔄 Running database updates on $FULL_ALIAS..."
-        ${LOCAL_DRUSH} $FULL_ALIAS ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh updb && exit"
+        ${LOCAL_DRUSH} $FULL_ALIAS ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh updb"
+        ${LOCAL_DRUSH} $FULL_ALIAS ssh "bash /var/www/html/"\${AH_SITE_NAME}"/scripts/hal_sites.sh maint:set 0"
         echo "✅ $FULL_ALIAS database updates complete"
     done
 done
