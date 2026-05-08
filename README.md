@@ -13,41 +13,22 @@ HAL provides standardized, interactive scripts for managing five Howard Universi
 
 All scripts feature a consistent, user-friendly interface with flexible targeting options and built-in safety confirmations. HAL includes enhanced support for Drupal 11 with specialized scripts for managing deprecated modules and database compatibility issues.
 
-## Changelog
-
-### Version 2.1.0 (October 2024)
-
-**🚀 Drupal 11 Compatibility Enhancements**
-- **NEW**: `remove_deprecated_modules.sh` - Automated cleanup of deprecated module database references
-- **IMPROVED**: Enhanced error handling for missing module files during upgrades
-- **IMPROVED**: Better support for Drupal 11 core changes and module deprecations
-
-**🔧 Architecture Improvements**
-- **ENHANCED**: Standardized targeting system across all scripts
-- **ENHANCED**: Improved error handling and safety confirmations
-- **ENHANCED**: Better progress feedback and user experience
-
-**📚 Documentation Updates**
-- **UPDATED**: Comprehensive script documentation with usage examples
-- **ADDED**: Troubleshooting section for common issues
-- **IMPROVED**: Installation and configuration instructions
-
 ## Quick Reference
 
 ### Most Common Commands
 
 ```bash
-# Universal drush command runner (cache rebuild, module enable, etc.)
+# Universal drush command runner (cache rebuild, module enable, db updates, etc.)
 $ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh
 
-# Update configuration values (site settings, etc.)  
+# Update configuration values (site settings, etc.)
 $ sh ~/Sites/_hal/drupal/acquia/update_config.sh
 
-# Run database updates after code deployments
-$ sh ~/Sites/_hal/drupal/acquia/update_db_on_acquia.sh
-
-# Clean up deprecated module database references (Drupal 11 compatibility)
+# Remove lingering module database references
 $ sh ~/Sites/_hal/drupal/acquia/remove_deprecated_modules.sh
+
+# List users, webforms, news feeds, or magazine feeds across sites
+$ sh ~/Sites/_hal/drupal/acquia/list.sh
 
 # Deploy code to production environments
 $ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh
@@ -84,29 +65,32 @@ cp hal_config.default.txt hal_config.txt
 Edit `hal_config.txt` to configure:
 
 - **Local Drush Installation** - Path to your Drush executable
-- **Howard D8 Folder Paths** - Absolute paths to your local Howard application folders  
+- **Howard D8 Folder Paths** - Absolute paths to your local Howard application folders
 - **Drush Aliases** - Your local Acquia Cloud drush aliases
-- **Acquia Credentials** - Your Acquia email and private key for deployments
+- **Acquia Prod Environment IDs** - Required for `acquia_code_deploy.sh` (see below)
 
 ### 3. Configuration Details
 
+#### Acquia Environment UUIDs
+
+Required for `acquia_code_deploy.sh`. After installing and authenticating acli, find your environment UUIDs:
+
+```bash
+acli api:applications:environment-list <your-app-uuid>
+```
+
+Fill in the `ACQUIA_ENV_UUID_*_prod` entries in `hal_config.txt` with the prod environment ID for each app.
+
 #### Setting a local drush
 
-- Navigate to the Drush 9 installed in the hud8 folder as a dependency, and adjust the path to match your local machine in config.
-- `LOCAL_DRUSH="/PATH/TO/YOUR/FOLDER/hud8/vendor/bin/drush"`
+- Set `LOCAL_DRUSH` to the path of the Drush executable installed as a Composer dependency in your local `hud8` folder.
+- Example: `LOCAL_DRUSH="/path/to/hud8/vendor/bin/drush"`
 
 #### Finding your local Howard D8 folders
 
-- LOCAL_HOWARD_D8_FOLDERS[0] = Your local hud8 root folder.
-- LOCAL_HOWARD_D8_FOLDERS[1] = Your local academicdepartments root folder.
-- LOCAL_HOWARD_D8_FOLDERS[2] = Your local howardenterprise root folder.
-- LOCAL_HOWARD_D8_FOLDERS[3] = Your local centers root folder.
-- LOCAL_HOWARD_D8_FOLDERS[4] = Your local uxws root folder.
-- Navigate to your DevDesktop sites folder.
-- Find the folder you wish to use, ie "hud8"
-- `cd hud8`
-- `pwd`: The out put of this would go into hal_config.txt as `LOCAL_HOWARD_D8_FOLDERS[0]="/PATH/TO/YOUR/FOLDER/hud8"` (NOTICE THE "0" HERE).
-- Subsequent paths, Academic Departments,for additional Howard D8 environments you wish to update would go into hal_config.txt as `LOCAL_HOWARD_D8_FOLDERS[1]="/PATH/TO/YOUR/OTHER/FOLDER/academicdepartments"` (NOTICE THE "1" HERE).
+- Set each `LOCAL_HOWARD_D8_FOLDERS[n]` to the absolute path of the corresponding local application root.
+- Run `pwd` inside the folder to get the exact path.
+- Example: `LOCAL_HOWARD_D8_FOLDERS[0]="/path/to/hud8"`
 
 #### Finding your local drush aliases
 
@@ -123,6 +107,9 @@ Edit `hal_config.txt` to configure:
 Be sure the following are up and running correctly on your local machine:
 
 - [Drush](https://docs.drush.org/en/master/install/)
+- [Acquia CLI (acli)](https://docs.acquia.com/acquia-cli/) — required for `acquia_code_deploy.sh`
+  - Install: `brew install acquia/acquia-cli/acli`
+  - Authenticate: `acli auth:login`
 
 ## Updating HAL
 
@@ -179,8 +166,9 @@ All HAL scripts include built-in safety measures:
 - Check that you have proper permissions to push to the repository
 
 **Acquia deployments fail:**
-- Verify `ACQUIA_EMAIL` and `ACQUIA_PRIVATE_KEY` are set correctly
-- Check that you have deployment permissions for the target environment
+- Verify `acli` is installed (`brew install acquia/acquia-cli/acli`) and authenticated (`acli auth:login`)
+- Check that `ACQUIA_ENV_UUID_*_prod` entries are populated in `hal_config.txt`
+- Confirm you have deployment permissions for the target application
 
 ## Architecture
 
@@ -215,9 +203,9 @@ Each Howard application has three environments:
 ### Script Categories
 
 1. **Core Automation Scripts** - Daily operational tasks (update_via_drush.sh, update_config.sh, etc.)
-2. **Deployment Scripts** - Code and database deployments (acquia_code_deploy.sh, update_db_on_acquia.sh)
-3. **Information Scripts** - Data gathering and reporting (list_users.sh, list_webforms.sh, etc.)
-4. **Legacy Scripts** - Drupal 7 maintenance and specialized tasks
+2. **Deployment Scripts** - Code deployments (acquia_code_deploy.sh)
+3. **Information Scripts** - Data gathering and reporting (list.sh)
+4. **Utility Scripts** - Specialized tasks (create_new_multisite.sh, update_howard_packages.sh)
 
 ## How this interacts with the acquia server
 
@@ -327,85 +315,50 @@ $ sh ~/Sites/_hal/drupal/acquia/update_config.sh
 - Update site name across all environments: Choose option 2, single app + all envs
 - Change maintenance mode system-wide: Choose option 4, all apps + all envs
 
-#### `update_db_on_acquia.sh` - Database Updates
-
-**Purpose**: Run database updates (`drush updb`) with flexible targeting options.
-
-**Features**:
-- All four targeting options available
-- Safety confirmation before execution
-- Clear progress feedback
-- Handles multiple environments efficiently
-
-**Usage**:
-```bash
-$ sh ~/Sites/_hal/drupal/acquia/update_db_on_acquia.sh
-# Choose targeting scope
-# Select application(s) and environment(s)  
-# Confirm execution
-```
-
-**Examples**:
-- Update single environment: Choose option 3, select test environment
-- Update single app across all environments: Choose option 2, select @hud8
-- Emergency system-wide update: Choose option 4 (use with extreme caution)
-
 #### `acquia_code_deploy.sh` - Code Deployment
 
-**Purpose**: Create Git tags and deploy code to specific Acquia environments.
+**Purpose**: Create Git tags on master and deploy to Acquia prod. Dev and test environments always stay on master.
 
 **Features**:
-- Standardized app and environment selection
-- Automatic tag creation with date versioning
-- Git operations (pull, push, tag push)
-- Direct deployment to selected environment
+- Deploy a single application or all applications in one run
+- Automatic date-based tag creation with collision handling
+- Git operations (pull, push, tag push) per repo
+- Deployment via `acli api:environments:code-switch`
+- Always targets prod — other envs are not touched
+
+**Requires**: `acli` installed and authenticated, and `ACQUIA_ENV_UUID_*_prod` entries populated in `hal_config.txt`.
 
 **Usage**:
 ```bash
 $ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh
-# Select application (@hud8, @academicdepartments, etc.)
-# Select environment (dev, test, prod)
-# Script creates tag and deploys automatically
+# Choose: Single Application or All Applications
+# If single: select which app
+# Script tags, pushes, and deploys each repo to prod
 ```
 
-**Process**:
-1. Navigates to selected application's local folder
-2. Creates date-based Git tag (e.g., `2025-10-17` or `2025-10-17.1` if tag exists)
-3. Pulls latest master, pushes master and tags
-4. Deploys tag to selected Acquia environment
+**Process** (per application):
+1. Creates date-based Git tag (e.g., `2026-05-08` or `2026-05-08.1` if tag exists)
+2. Pulls latest master, pushes master and tags to remote
+3. Deploys tag to prod via acli
 
-#### `remove_deprecated_modules.sh` - Deprecated Module Database Cleanup
+#### `remove_deprecated_modules.sh` - Module Database Cleanup
 
-**Purpose**: Clean up deprecated module database references for Drupal 11 compatibility. Removes lingering database entries for modules like ckeditor, mysql57, tour, seven, and ckeditor_lts that are no longer in the codebase.
+**Purpose**: Remove lingering database entries for one or more modules across Howard sites. Useful after uninstalling or removing modules that leave behind `system.schema` or config table entries.
 
 **Features**:
+- Prompts for one or more module machine names (space-separated)
 - All four targeting options available
-- Cleans up system.schema entries for deprecated modules
-- Removes configuration entries for deprecated modules
-- Safe execution with error handling for missing tables
-- Cache clearing after cleanup
+- Removes entries from `key_value` (system.schema) and `config` tables per module
+- Cache clear after each environment
 
 **Usage**:
 ```bash
 $ sh ~/Sites/_hal/drupal/acquia/remove_deprecated_modules.sh
+# Enter module machine name(s), space-separated, e.g: ckeditor tour seven
 # Choose targeting scope
 # Select application(s) and environment(s)
-# Review modules to be cleaned up
 # Confirm execution
 ```
-
-**What it cleans**:
-- `ckeditor` - Legacy CKEditor module (replaced by CKEditor 5)
-- `mysql57` - MySQL driver compatibility module
-- `tour` - Removed from Drupal 11 core
-- `seven` - Legacy admin theme
-- `ckeditor_lts` - CKEditor LTS version
-
-**Use cases**:
-- After Drupal 11 upgrades to clean up legacy module references
-- When sites show "module missing" warnings for deprecated modules
-- Preparing sites for production deployment after major upgrades
-- Troubleshooting bootstrap issues caused by missing module files
 
 ### Legacy and Utility Scripts
 
@@ -430,24 +383,15 @@ You will also be given the option to commit/push immediately, and whether you wi
 - You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
 - `$ sh ~/Sites/_hal/drupal/acquia/create_new_multisite.sh`
 
-#### Update all Howard packagist repos, on all Howard D9 sites, commit, and push to acquia
+#### Update all Howard packagist repos, on all Howard D8 sites, commit, and push to acquia
 
-You will also be given the option to commit/push immediately. If git automation is not chosen, a new git branch will be created and used locally: "new_howard_multisite_TIMESTAMP".
+You will also be given the option to commit/push immediately. If git automation is not chosen, a new git branch will be created and used locally: "howard_package_updates_TIMESTAMP".
 
 - Be sure that HAL is up to date.
 - Be sure that all desired local folders are set up in hal_config.txt.
 - Be sure that you are on master branch, and it is up to date.
 - You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
 - `$ sh ~/Sites/_hal/drupal/acquia/update_howard_packages.sh`
-
-#### Update the twitter API key on all sites
-
-- Be sure that HAL is up to date.
-- Be sure that all desired local drush aliases are set up in hal_config.txt.
-- Be sure that you are on master branch, and it is up to date.
-- You may set twitter credentials in hal_config.txt and simply hit enter through the prompts, or paste them in as the prompts arise.
-- You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
-- `$ sh ~/Sites/_hal/drupal/acquia/update_twitter_api_key.sh`
 
 #### Update config item on all sites
 
@@ -466,84 +410,39 @@ You will also be given the option to commit/push immediately. If git automation 
 - Add the desired command only, ie "pm-uninstall page_cache", as things like "drush" and "@sites" are added by the script.
 - `$ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh`
 
-#### Update database on all acquia D9 sites
+#### Update database on acquia sites
+
+- Use `update_via_drush.sh` with drush command `updb`.
+- `$ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh`
+
+#### Push master branch, create a new tag, and deploy to Acquia Prod
 
 - Be sure that HAL is up to date.
-- Be sure that all desired local drush aliases are set up in hal_config.txt.
-- Be sure all acquia drush aliases are up to date.
-- You may choose either hud8 or academicdepartments. The script then runs drush updb on all multi-sites on dev, stg, and prod.
-- You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
-- `$ sh ~/Sites/_hal/drupal/acquia/update_db_on_acquia.sh`
-
-#### Push master branch, creates new Tag and deploys new Tag to Acquia Prod Environment
-
-- Be sure that HAL is up to date.
-- Be sure that all desired local drush aliases are set up in hal_config.txt.
-- Be sure all acquia drush aliases are up to date.
-- Be sure either the HUD8 or the academicdepartments master branch is up-to-date
-- Be sure Acquia Private Key and Acquia E-mail are up to date.
-- You may choose either hud8 or academicdepartments Prod Environment.
-- This script will push master branch, create new Tag  and deploy code to the selected Prod environment.
-- You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
+- Be sure `acli` is installed and authenticated (`acli auth:login`).
+- Be sure `ACQUIA_ENV_UUID_*_prod` entries are populated in `hal_config.txt`.
+- Be sure the target application's master branch is up to date.
+- Choose "Single Application" to deploy one app, or "All Applications" to deploy all five.
+- The script tags master, pushes master and the tag, then switches the prod environment to the tag via acli.
 - `$ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh`
 
-#### List all non admin users on sites.
+#### List users, webforms, news feeds, and magazine feeds across sites.
 
-This script is set to be able to quickly see what non admin users are on all sites in an application. It may be modified in the future to perform more operations. Currently, it uses a script on the hud8, and academicdepartment servers, `/scripts/hal_user_list`. Any modifications to the functionality desired, will likely need to modify those scripts also.
-
-- Be sure that HAL is up to date.
-- Be sure that all desired local drush aliases are set up in hal_config.txt.
-- Be sure all acquia drush aliases are up to date.
-- You may choose either dev, test, or prod, at which point it will list all users, on all multisites, on both hud8 and academicdepartments, for the chosen environment.
-- The script will then list the user id, user name, and email for all non administrator accounts.
-- `$ sh ~/Sites/_hal/drupal/acquia/list_users.sh`
-
-#### List all webforms on sites.
-
-This script is set to be able to quickly see what webforms are on all sites in an application. It may be modified in the future to perform more operations. Currently, it uses a script on the hud8, and academicdepartment servers, `/scripts/hal_webform_list`. Any modifications to the functionality desired, will likely need to modify those scripts also.
+A single unified script for listing data across all Howard D8 sites. Prompts for the list type at runtime. Relies on the corresponding remote list scripts (`hal_user_list.sh`, `hal_webform_list.sh`, etc.) on the app servers.
 
 - Be sure that HAL is up to date.
 - Be sure that all desired local drush aliases are set up in hal_config.txt.
 - Be sure all acquia drush aliases are up to date.
-- You may choose either dev, test, or prod, at which point it will list all webforms, on all multisites, on both hud8 and academicdepartments, for the chosen environment.
-- The script will then list the webform id.
-- `$ sh ~/Sites/_hal/drupal/acquia/list_webforms.sh`
-
-#### List all News feeds on sites.
-
-This script is set to be able to quickly see what news feed widgets are on all sites in an application. It may be modified in the future to perform more operations. Currently, it uses a script on the hud8, and academicdepartment servers, `/scripts/hal_newsfeed_list`. Any modifications to the functionality desired, will likely need to modify those scripts also.
-
-- Be sure that HAL is up to date.
-- Be sure that all desired local drush aliases are set up in hal_config.txt.
-- Be sure all acquia drush aliases are up to date.
-- You may choose either dev, test, or prod, at which point it will list all webforms, on all multisites, on both hud8 and academicdepartments, for the chosen environment.
-- `$ sh ~/Sites/_hal/drupal/acquia/list_newsfeeds.sh`
-
-#### List all Magazine feeds on sites.
-
-This script is set to be able to quickly see what magazine feed widgets are on all sites in an application. It may be modified in the future to perform more operations. Currently, it uses a script on the hud8, and academicdepartment servers, `/scripts/hal_magazinefeed_list`. Any modifications to the functionality desired, will likely need to modify those scripts also.
-
-- Be sure that HAL is up to date.
-- Be sure that all desired local drush aliases are set up in hal_config.txt.
-- Be sure all acquia drush aliases are up to date.
-- You may choose either dev, test, or prod, at which point it will list all webforms, on all multisites, on both hud8 and academicdepartments, for the chosen environment.
-- `$ sh ~/Sites/_hal/drupal/acquia/list_magazinefeeds.sh`
-
-## Drupal 7 Legacy
-
-The following scripts exist as a stopgap in order to perform user operations on howard d7 sites.
-
-- Reset password for a user: `sh ~/Sites/_hal/drupal/acquia/d7_reset_password.sh`.
-- Cancel user account: `sh ~/Sites/_hal/drupal/acquia/d7_cancel_user.sh`.
+- Choose the list type (users, webforms, newsfeeds, or magazinefeeds) when prompted.
+- Choose dev, test, or prod; the script runs the selected list across all apps for that environment.
+- `$ sh ~/Sites/_hal/drupal/acquia/list.sh`
 
 ## User maintenance
 
 The following is a quick guide to disabling uses across all howard ecosystems, if required.
 
-- For D8 sites, run `sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh`, choose environments, and drush command when prompted: `user:cancel first.last`.
-- For D7 sites, run `sh ~/Sites/_hal/drupal/acquia/d7_cancel_user.sh`, and type in username when prompted, ie `first.last`.
+- Run `sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh`, choose environments, and enter drush command when prompted: `user:cancel first.last`.
 
-This will block the user account an reassign all content to anon user.
+This will block the user account and reassign all content to the anonymous user.
 
 ## Roadmap
 

@@ -25,12 +25,13 @@ echo "This script will create the local sites folder, commit and push to acquia.
 echo "Be sure you are on the correct branch to deploy to STG env."
 
 source ~/Sites/_hal/hal_config.txt
+source ~/Sites/_hal/drupal/acquia/partials/select_app_and_env.sh
 YES_NO=( "YES" "NO" )
 
 # Acquia ENV to create site on, use as $ACQUIA_ENV
 TO_ACQUIA_ENVS=( "${LOCAL_HOWARD_D8_DRUSH_ALIAS[0]}.test" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[1]}.test" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[2]}.test" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[3]}.test" "${LOCAL_HOWARD_D8_DRUSH_ALIAS[4]}.test")
 select ACQUIA_ENV in "${TO_ACQUIA_ENVS[@]}"; do
-  if [[ -z "$" ]]; then
+  if [[ -z "$ACQUIA_ENV" ]]; then
     printf '"%s" is not a valid choice\n' "$REPLY" >&2
   else
     break
@@ -70,7 +71,7 @@ fi
 # See if user wishes to automatically commit and push.
 echo "Do you wish to automatically commit these changes and push to master branch?"
 select PUSH_GIT in "${YES_NO[@]}"; do
-  if [[ -z "$" ]]; then
+  if [[ -z "$PUSH_GIT" ]]; then
     printf '"%s" is not a valid choice\n' "$REPLY" >&2
   else
     break
@@ -80,7 +81,7 @@ done
 # See if user wishes to automatically copy database.
 echo "Do you wish to automatically copy the stg.coasdept DB to this new site?"
 select COPY_DB in "${YES_NO[@]}"; do
-  if [[ -z "$" ]]; then
+  if [[ -z "$COPY_DB" ]]; then
     printf '"%s" is not a valid choice\n' "$REPLY" >&2
   else
     break
@@ -90,7 +91,7 @@ done
 # See if user wishes to automatically copy files.
 echo "Do you wish to automatically copy the stg.coasdept files to this new site?"
 select COPY_FILES in "${YES_NO[@]}"; do
-  if [[ -z "$" ]]; then
+  if [[ -z "$COPY_FILES" ]]; then
     printf '"%s" is not a valid choice\n' "$REPLY" >&2
   else
     break
@@ -99,22 +100,9 @@ done
 
 # Move to proper folder
 echo "Moving to proper folder..."
-if [[ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[0]}.test" ]]
-then
-  cd ${LOCAL_HOWARD_D8_FOLDERS[0]}/docroot/sites
-elif [[ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[1]}.test" ]]
-then
-  cd ${LOCAL_HOWARD_D8_FOLDERS[1]}/docroot/sites
-elif [[ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[2]}.test" ]]
-then
-  cd ${LOCAL_HOWARD_D8_FOLDERS[2]}/docroot/sites
-elif [[ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[3]}.test" ]]
-then
-  cd ${LOCAL_HOWARD_D8_FOLDERS[3]}/docroot/sites
-elif [[ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[4]}.test" ]]
-then
-  cd ${LOCAL_HOWARD_D8_FOLDERS[4]}/docroot/sites
-fi
+APP_ALIAS="${ACQUIA_ENV%.*}"
+LOCAL_FOLDER=$(get_local_folder_for_app "$APP_ALIAS")
+cd "$LOCAL_FOLDER/docroot/sites"
 
 # Check to ensure we are master git branch, and things are up to date.
 DIR="${BASH_SOURCE%/*}"

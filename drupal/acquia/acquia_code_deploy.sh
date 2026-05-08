@@ -1,59 +1,100 @@
 #!/bin/bash
 #
-# This script creates a new tag and deploys it to Howard Acquia environments.
-
+# This script creates a new tag on master and deploys it to Howard Acquia prod environments.
+#
 # $ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh
 #
 # Notes:
 # - See README.md for detailed instructions.
+# - Always deploys to prod. Other environments stay on master.
 #
 # Dependencies:
-# - Drush: https://www.drush.org/
+# - Acquia CLI (acli): https://docs.acquia.com/acquia-cli/
+#   Install: brew install acquia/acquia-cli/acli
+#   Authenticate: acli auth:login
 #
 # Parameters:
-# - Application | The Howard application to deploy to
-# - Environment | The environment to deploy to (dev, test, prod)
-# - E-mail | Acquia E-mail
-# - Private Key | Acquia private key
+# - Scope | Single application or all applications
 
 source ~/Sites/_hal/hal_config.txt
 source ~/Sites/_hal/drupal/acquia/partials/select_app_and_env.sh
 
-# Use standardized app and environment selection
-echo "Code deployment for Howard D8 sites."
-select_app_and_env
+echo "Code deployment to Acquia PROD for Howard D8 sites."
 
-# Navigate to the selected application's local folder
-LOCAL_FOLDER=$(get_local_folder_for_app "$SELECTED_APP")
-cd "$LOCAL_FOLDER"
-
-echo 'Creating new tag on the master branch'
-
-
-DATE=$( date '+%Y-%m-%d' )
-ADD_TAG=$( git tag -a $DATE -m "Creating new Tag" 2>&1 )
-
-if [[ $ADD_TAG == *"already exists"* ]]
-then
-  TAG=$( git tag 2>&1 )
-  IFS=$'\n' read -ra array <<< $TAG
-  VERSION_NUMBER=$(grep -o $DATE  <<< ${array[@]} | wc -l 2>&1 )
-  let "VERSION_NUMBER=VERSION_NUMBER-1"
-  TAG=$DATE.$VERSION_NUMBER
-  git tag -a $TAG -m "Creating new Tag"
-else
-  TAG=$DATE
+# Check acli is installed and in PATH
+if ! command -v acli &> /dev/null; then
+  echo "Error: acli is not installed or not in PATH."
+  echo "Install:      brew install acquia/acquia-cli/acli"
+  echo "Authenticate: acli auth:login"
+  exit 2
 fi
 
-# Check if Acquia E-mail and Private Key are not empty
-if [ -z "$ACQUIA_EMAIL" ] || [ -z "$ACQUIA_PRIVATE_KEY" ]; then
-  echo "You are missing either your Acquia e-mail or Acquia private key. Please update your credienatials"
-  exit 2
+# Choose scope
+echo "Deploy to:"
+SCOPES=( "Single Application" "All Applications" )
+select SCOPE in "${SCOPES[@]}"; do
+  if [[ -z "$SCOPE" ]]; then
+    printf '"%s" is not a valid choice\n' "$REPLY" >&2
+  else
+    break
+  fi
+done
+
+if [[ "$SCOPE" == "Single Application" ]]; then
+  select_app_only
+  TARGET_APPS=("$SELECTED_APP")
 else
+  echo "Selected: All Applications"
+  TARGET_APPS=("${LOCAL_HOWARD_D8_DRUSH_ALIAS[@]}")
+fi
+
+# Deploy function: tag, push, and acli deploy for one app
+deploy_app() {
+  local APP="$1"
+  local APP_KEY="${APP#@}"
+  local LOCAL_FOLDER
+  LOCAL_FOLDER=$(get_local_folder_for_app "$APP")
+
+  echo ""
+  echo "=== Deploying $APP ==="
+  cd "$LOCAL_FOLDER"
+
+  echo "Creating new tag on master..."
+  DATE=$( date '+%Y-%m-%d' )
+  ADD_TAG=$( git tag -a "$DATE" -m "Creating new Tag" 2>&1 )
+
+  if [[ $ADD_TAG == *"already exists"* ]]; then
+    TAG=$( git tag 2>&1 )
+    IFS=$'\n' read -ra array <<< "$TAG"
+    VERSION_NUMBER=$(grep -o "$DATE" <<< "${array[@]}" | wc -l 2>&1)
+    let "VERSION_NUMBER=VERSION_NUMBER-1"
+    TAG="$DATE.$VERSION_NUMBER"
+    git tag -a "$TAG" -m "Creating new Tag"
+  else
+    TAG="$DATE"
+  fi
+
   git pull origin master
   git push origin master
   git push origin --tags
-fi
 
-echo "Deploying tag ${TAG} to ${FULL_ALIAS}..."
-${LOCAL_DRUSH} ${SELECTED_APP}.prod ssh "drush ${FULL_ALIAS} ac-code-path-deploy tags/${TAG} --email=${ACQUIA_EMAIL} --key=${ACQUIA_PRIVATE_KEY} && exit"
+  VAR_NAME="ACQUIA_ENV_UUID_${APP_KEY}_prod"
+  ENV_UUID="${!VAR_NAME}"
+  if [ -z "$ENV_UUID" ] || [ "$ENV_UUID" = "UUID_HERE" ]; then
+    echo "Error: No prod environment ID configured for ${APP}."
+    echo "Add ${VAR_NAME}=\"your-id\" to hal_config.txt."
+    return 1
+  fi
+
+  echo "Deploying tag ${TAG} to ${APP}.prod..."
+  acli api:environments:code-switch "$ENV_UUID" "tags/${TAG}"
+}
+
+# Run
+for APP in "${TARGET_APPS[@]}"; do
+  deploy_app "$APP"
+done
+
+echo ""
+echo "Deployment complete."
+exit 0

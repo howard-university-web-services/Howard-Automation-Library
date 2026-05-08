@@ -9,7 +9,12 @@ LOCAL_HOWARD_D8_DRUSH_ALIAS[1]="@academicdepartments"
 LOCAL_HOWARD_D8_DRUSH_ALIAS[2]="@howardenterprise"
 LOCAL_HOWARD_D8_DRUSH_ALIAS[3]="@centers"
 LOCAL_HOWARD_D8_DRUSH_ALIAS[4]="@uxws"
-TWITTER_API_KEY="API Key Here"
-TWITTER_API_SECRET="API Secret Here"
-TWITTER_ACCESS_TOKEN="Access Token Here"
-TWITTER_ACCESS_SECRET="Access Secret Here"
+
+# Acquia prod environment IDs — used by acquia_code_deploy.sh
+# Find via: acli api:applications:environment-list <app-uuid>
+# Format: {env_number}-{app_uuid}
+ACQUIA_ENV_UUID_hud8_prod="UUID_HERE"
+ACQUIA_ENV_UUID_academicdepartments_prod="UUID_HERE"
+ACQUIA_ENV_UUID_howardenterprise_prod="UUID_HERE"
+ACQUIA_ENV_UUID_centers_prod="UUID_HERE"
+ACQUIA_ENV_UUID_uxws_prod="UUID_HERE"

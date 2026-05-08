@@ -24,7 +24,7 @@ YES_NO=( "YES" "NO" )
 # See if user wishes to automatically commit and push.
 echo "Do you wish to automatically commit these changes and push to master branch for each repository?"
 select PUSH_GIT in "${YES_NO[@]}"; do
-  if [[ -z "$" ]]; then
+  if [[ -z "$PUSH_GIT" ]]; then
     printf '"%s" is not a valid choice\n' "$REPLY" >&2
   else
     break
@@ -47,7 +47,7 @@ for app in ${LOCAL_HOWARD_D8_FOLDERS[@]}; do
   then
     echo "Creating new git branch, since automatic pushes not chosen."
     STAMP="$(date '+%Y_%m_%d_%H_%M_%S')"
-    BRANCH="new_howard_multisite_$STAMP"
+    BRANCH="howard_package_updates_$STAMP"
     echo "$BRANCH"
     git branch $BRANCH
     git checkout $BRANCH
