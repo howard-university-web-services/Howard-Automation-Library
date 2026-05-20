@@ -3,6 +3,7 @@
 # Update all Howard packagist repos, on all Howard D8 sites, commit, and push to acquia.
 #
 # $ sh ~/Sites/_hal/drupal/acquia/update_howard_packages.sh
+# Scope: Local — modifies local files and git branches via composer
 #
 # Notes:
 # - See README.md for detailed instructions.

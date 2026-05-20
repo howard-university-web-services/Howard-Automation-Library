@@ -1,12 +1,16 @@
 #!/bin/bash
 #
-# Update Drupal core (and drupal/core-recommended) on all Howard D8 sites, commit, and push to acquia.
+# Update all Drupal contrib modules/themes on all Howard D8 sites, commit, and push to acquia.
 #
-# $ sh ~/Sites/_hal/drupal/acquia/update_drupal_core.sh
+# $ sh ~/Sites/_hal/drupal/acquia/update_drupal_contrib.sh
 # Scope: Local — modifies local files and git branches via composer
 #
 # Notes:
 # - See README.md for detailed instructions.
+# - Runs: composer update "drupal/*" --with-all-dependencies
+# - This updates all drupal/* packages (contrib modules, themes, and core within
+#   its existing version constraints). To update core to a new minor/major version,
+#   use update_drupal_core.sh instead.
 #
 # Dependencies:
 # - Git
@@ -17,7 +21,7 @@
 # - Push Git | Defines whether to commit and push code
 #
 
-echo "This script will update Drupal core in all local folders specified in hal_config.txt, commit and push to acquia."
+echo "This script will update all Drupal contrib modules/themes in all local folders specified in hal_config.txt, commit and push to acquia."
 
 source ~/Sites/_hal/hal_config.txt
 YES_NO=( "YES" "NO" )
@@ -50,17 +54,15 @@ if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 for app in "${LOCAL_HOWARD_D8_FOLDERS[@]}"; do
   echo "------------------------------------------------------------"
   if [ "$DRY_RUN" = "YES" ]; then
-    echo "[DRY RUN] Checking Drupal core updates in $app"
+    echo "[DRY RUN] Checking Drupal contrib updates in $app"
   else
-    echo "Running Drupal core update in $app"
+    echo "Running Drupal contrib update in $app"
   fi
   cd "$app" || { echo "ERROR: Could not cd into $app, skipping."; continue; }
 
   if [ "$DRY_RUN" = "NO" ]; then
     composer clearcache
-  fi
 
-  if [ "$DRY_RUN" = "NO" ]; then
     # Check to ensure we are on master git branch, and things are up to date.
     . "$DIR/partials/check_git_status.sh"
 
@@ -68,7 +70,7 @@ for app in "${LOCAL_HOWARD_D8_FOLDERS[@]}"; do
     if [ "$PUSH_GIT" = "NO" ]; then
       echo "Creating new git branch, since automatic pushes not chosen."
       STAMP="$(date '+%Y_%m_%d_%H_%M_%S')"
-      BRANCH="drupal_core_update_$STAMP"
+      BRANCH="drupal_contrib_update_$STAMP"
       echo "$BRANCH"
       git branch "$BRANCH"
       git checkout "$BRANCH"
@@ -78,16 +80,16 @@ for app in "${LOCAL_HOWARD_D8_FOLDERS[@]}"; do
   fi
 
   if [ "$DRY_RUN" = "YES" ]; then
-    composer update drupal/core drupal/core-recommended drupal/core-composer-scaffold drupal/core-project-message --with-all-dependencies --dry-run
+    composer update "drupal/*" --with-all-dependencies --dry-run
   else
-    composer update drupal/core drupal/core-recommended drupal/core-composer-scaffold drupal/core-project-message --with-all-dependencies
+    composer update "drupal/*" --with-all-dependencies
   fi
 
   # If git ops automated, commit and push.
   if [ "$DRY_RUN" = "NO" ] && [ "$PUSH_GIT" = "YES" ]; then
     echo "Committing to git and pushing..."
     git add .
-    git commit -m 'Updating Drupal core, via Howard Automation Library'
+    git commit -m 'Updating all Drupal contrib modules and themes, via Howard Automation Library'
     git push origin master
   elif [ "$DRY_RUN" = "NO" ]; then
     echo "GIT commits and push skipped. Site will not update on acquia until manually committed and pushed."
@@ -99,7 +101,7 @@ echo "------------------------------------------------------------"
 if [ "$DRY_RUN" = "YES" ]; then
   echo "Dry run complete. No files were modified."
 else
-  echo "Drupal core update complete for all sites."
+  echo "Drupal contrib update complete for all sites."
 fi
 
 exit 0

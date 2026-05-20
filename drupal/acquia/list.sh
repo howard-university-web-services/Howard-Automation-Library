@@ -3,6 +3,7 @@
 # List various data across all Howard D8 Sites.
 #
 # $ sh ~/Sites/_hal/drupal/acquia/list.sh
+# Scope: Remote — connects to Acquia environments via drush
 #
 # Notes:
 # - See README.md for detailed instructions.

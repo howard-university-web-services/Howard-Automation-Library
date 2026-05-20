@@ -3,6 +3,7 @@
 # Flexible drush command runner for Howard D8 Sites.
 #
 # $ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh
+# Scope: Remote — connects to Acquia environments via drush
 #
 # Notes:
 # - See README.md for detailed instructions.

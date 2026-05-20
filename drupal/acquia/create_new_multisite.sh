@@ -4,6 +4,7 @@
 # create a new multisite DB on acquia, clone the stg.coasdept.howard.edu DB and Files into it.
 #
 # $ sh ~/Sites/_hal/drupal/acquia/create_new_multisite.sh
+# Scope: Local + Remote — creates local files and git branches, then connects to Acquia
 #
 # Notes:
 # - See README.md for detailed instructions.

@@ -3,6 +3,7 @@
 # This script creates a new tag on master and deploys it to Howard Acquia prod environments.
 #
 # $ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh
+# Scope: Remote — deploys to Acquia prod environments via acli
 #
 # Notes:
 # - See README.md for detailed instructions.

@@ -3,6 +3,7 @@
 # Remove module database references across Howard D8 installs on Acquia.
 #
 # $ sh ~/Sites/_hal/drupal/acquia/remove_deprecated_modules.sh
+# Scope: Remote — connects to Acquia environments via drush
 #
 # Notes:
 # - See README.md for detailed instructions.

@@ -22,7 +22,7 @@ All scripts feature a consistent, user-friendly interface with flexible targetin
 $ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh
 
 # Update configuration values (site settings, etc.)
-$ sh ~/Sites/_hal/drupal/acquia/update_config.sh
+$ sh ~/Sites/_hal/drupal/acquia/acquia_config_set.sh
 
 # Remove lingering module database references
 $ sh ~/Sites/_hal/drupal/acquia/remove_deprecated_modules.sh
@@ -33,8 +33,14 @@ $ sh ~/Sites/_hal/drupal/acquia/list.sh
 # Deploy code to production environments
 $ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh
 
+# Full update (core + contrib + Howard packages) across all local Howard D8 applications
+$ sh ~/Sites/_hal/drupal/acquia/update_all.sh
+
 # Update Drupal core across all local Howard D8 applications
 $ sh ~/Sites/_hal/drupal/acquia/update_drupal_core.sh
+
+# Update all Drupal contrib modules/themes across all local Howard D8 applications
+$ sh ~/Sites/_hal/drupal/acquia/update_drupal_contrib.sh
 
 # Update all Howard packagist repos across all local Howard D8 applications
 $ sh ~/Sites/_hal/drupal/acquia/update_howard_packages.sh
@@ -42,7 +48,7 @@ $ sh ~/Sites/_hal/drupal/acquia/update_howard_packages.sh
 
 ### Targeting Options (Available in drush-based scripts)
 
-The drush-based scripts (`update_via_drush.sh`, `update_config.sh`, `remove_deprecated_modules.sh`, `list.sh`, `acquia_code_deploy.sh`) use an interactive targeting system:
+The drush-based scripts (`update_via_drush.sh`, `acquia_config_set.sh`, `remove_deprecated_modules.sh`, `list.sh`, `acquia_code_deploy.sh`) use an interactive targeting system:
 
 1. **Single App + Single Env** → Precise targeting (e.g., @hud8 dev only)
 2. **Single App + All Envs** → App-wide (e.g., @hud8 across dev/test/prod)  
@@ -212,10 +218,21 @@ Each Howard application has three environments:
 
 ### Script Categories
 
-1. **Core Automation Scripts** - Daily operational tasks (update_via_drush.sh, update_config.sh, remove_deprecated_modules.sh, list.sh)
-2. **Deployment Scripts** - Code deployments (acquia_code_deploy.sh)
-3. **Utility Scripts** - Local composer-based updates (update_drupal_core.sh, update_howard_packages.sh)
-4. **Setup Scripts** - Site scaffolding (create_new_multisite.sh)
+**Remote** (connects to Acquia environments via drush/acli — no local file changes):
+- `update_via_drush.sh` — Universal drush command runner
+- `acquia_config_set.sh` — Configuration value updates via drush config:set
+- `remove_deprecated_modules.sh` — Module database cleanup
+- `list.sh` — Data listing across sites
+- `acquia_code_deploy.sh` — Code deployment to prod via acli
+
+**Local** (operates on your local machine — modifies files and git branches via composer):
+- `update_all.sh` — Full update: core + contrib + Howard packages
+- `update_drupal_core.sh` — Drupal core updates
+- `update_drupal_contrib.sh` — Drupal contrib module and theme updates
+- `update_howard_packages.sh` — Howard packagist updates
+
+**Local + Remote** (creates local files, then connects to Acquia):
+- `create_new_multisite.sh` — New multisite scaffolding
 
 ## How this interacts with the acquia server
 
@@ -299,7 +316,7 @@ $ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh
 - Enable module system-wide: Choose option 4, command: `pm:enable page_cache`
 - Update database on one app: Choose option 2, @academicdepartments, command: `updb`
 
-#### `update_config.sh` - Precise Configuration Updates
+#### `acquia_config_set.sh` - Precise Configuration Updates
 
 **Purpose**: Update specific configuration values on targeted Howard sites using `drush config:set`.
 
@@ -311,7 +328,7 @@ $ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh
 
 **Usage**:
 ```bash
-$ sh ~/Sites/_hal/drupal/acquia/update_config.sh  
+$ sh ~/Sites/_hal/drupal/acquia/acquia_config_set.sh  
 # Choose targeting scope
 # Select application(s) and environment(s)
 # Enter config name (e.g., "system.site")
@@ -419,6 +436,16 @@ You will also be given the option to commit/push immediately. If git automation 
 - You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
 - `$ sh ~/Sites/_hal/drupal/acquia/update_howard_packages.sh`
 
+#### Run a full update (core, contrib, and Howard packages) on all Howard D8 sites, commit, and push to acquia
+
+Runs all three composer update operations in sequence per site: Drupal core, all `drupal/*` contrib modules/themes, and all `howard/*` packages. Supports dry-run mode. If git automation is not chosen, a new git branch will be created and used locally: "full_update_TIMESTAMP".
+
+- Be sure that HAL is up to date.
+- Be sure that all desired local folders are set up in hal_config.txt.
+- Be sure that you are on master branch, and it is up to date.
+- You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
+- `$ sh ~/Sites/_hal/drupal/acquia/update_all.sh`
+
 #### Update Drupal core on all Howard D8 sites, commit, and push to acquia
 
 Updates `drupal/core`, `drupal/core-recommended`, `drupal/core-composer-scaffold`, and `drupal/core-project-message` (with all dependencies) across every local Howard D8 application. You will also be given the option to commit/push immediately. If git automation is not chosen, a new git branch will be created and used locally: "drupal_core_update_TIMESTAMP".
@@ -429,13 +456,23 @@ Updates `drupal/core`, `drupal/core-recommended`, `drupal/core-composer-scaffold
 - You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
 - `$ sh ~/Sites/_hal/drupal/acquia/update_drupal_core.sh`
 
+#### Update all Drupal contrib modules and themes on all Howard D8 sites, commit, and push to acquia
+
+Runs `composer update "drupal/*" --with-all-dependencies` across every local Howard D8 application, updating all contrib modules and themes within their existing version constraints. You will also be given the option to commit/push immediately. If git automation is not chosen, a new git branch will be created and used locally: "drupal_contrib_update_TIMESTAMP".
+
+- Be sure that HAL is up to date.
+- Be sure that all desired local folders are set up in hal_config.txt.
+- Be sure that you are on master branch, and it is up to date.
+- You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
+- `$ sh ~/Sites/_hal/drupal/acquia/update_drupal_contrib.sh`
+
 #### Update config item on all sites
 
 - Be sure that HAL is up to date.
 - Be sure that all desired local drush aliases are set up in hal_config.txt.
 - Paste in Name, Key, and Value as the prompts arise.
 - Relies on [drush cset](https://drushcommands.com/drush-8x/config/config-set/), please ensure this is understood before using.
-- `$ sh ~/Sites/_hal/drupal/acquia/update_config.sh`
+- `$ sh ~/Sites/_hal/drupal/acquia/acquia_config_set.sh`
 - See [idfive developer documentation](https://developers.idfive.com/#/back-end/drupal/drupal-config-management?id=one-time-config-overrides-via-drush) for overview of approach, and finding Name, Key, and Values desired.
 
 #### Run drush command on all sites

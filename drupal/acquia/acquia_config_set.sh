@@ -2,7 +2,8 @@
 #
 # Update specific config on Howard D8 Sites.
 #
-# $ sh ~/Sites/_hal/drupal/acquia/update_config.sh
+# $ sh ~/Sites/_hal/drupal/acquia/acquia_config_set.sh
+# Scope: Remote — connects to Acquia environments via drush
 #
 # Notes:
 # - See README.md for detailed instructions.
