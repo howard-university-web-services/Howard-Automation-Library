@@ -62,18 +62,13 @@ deploy_app() {
 
   echo "Creating new tag on master..."
   DATE=$( date '+%Y-%m-%d' )
-  ADD_TAG=$( git tag -a "$DATE" -m "Creating new Tag" 2>&1 )
-
-  if [[ $ADD_TAG == *"already exists"* ]]; then
-    TAG=$( git tag 2>&1 )
-    IFS=$'\n' read -ra array <<< "$TAG"
-    VERSION_NUMBER=$(grep -o "$DATE" <<< "${array[@]}" | wc -l 2>&1)
-    let "VERSION_NUMBER=VERSION_NUMBER-1"
-    TAG="$DATE.$VERSION_NUMBER"
-    git tag -a "$TAG" -m "Creating new Tag"
-  else
-    TAG="$DATE"
-  fi
+  TAG="$DATE"
+  SUFFIX=1
+  while [[ -n "$(git tag -l "$TAG")" ]]; do
+    TAG="${DATE}.${SUFFIX}"
+    ((SUFFIX++))
+  done
+  git tag -a "$TAG" -m "Creating new Tag"
 
   git pull origin master
   git push origin master
