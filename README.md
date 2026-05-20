@@ -32,14 +32,24 @@ $ sh ~/Sites/_hal/drupal/acquia/list.sh
 
 # Deploy code to production environments
 $ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh
+
+# Update Drupal core across all local Howard D8 applications
+$ sh ~/Sites/_hal/drupal/acquia/update_drupal_core.sh
+
+# Update all Howard packagist repos across all local Howard D8 applications
+$ sh ~/Sites/_hal/drupal/acquia/update_howard_packages.sh
 ```
 
-### Targeting Options (Available in All Scripts)
+### Targeting Options (Available in drush-based scripts)
+
+The drush-based scripts (`update_via_drush.sh`, `update_config.sh`, `remove_deprecated_modules.sh`, `list.sh`, `acquia_code_deploy.sh`) use an interactive targeting system:
 
 1. **Single App + Single Env** → Precise targeting (e.g., @hud8 dev only)
 2. **Single App + All Envs** → App-wide (e.g., @hud8 across dev/test/prod)  
 3. **All Apps + Single Env** → Environment-wide (e.g., all apps on test)
 4. **All Apps + All Envs** → System-wide (use with extreme caution)
+
+The composer-based scripts (`update_drupal_core.sh`, `update_howard_packages.sh`) operate on all local folders defined in `hal_config.txt` and prompt only about git commit/push — they do not use the targeting system above.
 
 ## Installation
 
@@ -202,10 +212,10 @@ Each Howard application has three environments:
 
 ### Script Categories
 
-1. **Core Automation Scripts** - Daily operational tasks (update_via_drush.sh, update_config.sh, etc.)
+1. **Core Automation Scripts** - Daily operational tasks (update_via_drush.sh, update_config.sh, remove_deprecated_modules.sh, list.sh)
 2. **Deployment Scripts** - Code deployments (acquia_code_deploy.sh)
-3. **Information Scripts** - Data gathering and reporting (list.sh)
-4. **Utility Scripts** - Specialized tasks (create_new_multisite.sh, update_howard_packages.sh)
+3. **Utility Scripts** - Local composer-based updates (update_drupal_core.sh, update_howard_packages.sh)
+4. **Setup Scripts** - Site scaffolding (create_new_multisite.sh)
 
 ## How this interacts with the acquia server
 
@@ -360,6 +370,22 @@ $ sh ~/Sites/_hal/drupal/acquia/remove_deprecated_modules.sh
 # Confirm execution
 ```
 
+#### `list.sh` - Data Listing Across Sites
+
+**Purpose**: Retrieve and display lists of users, webforms, news feeds, or magazine feeds across all Howard D8 sites. Relies on remote `hal_*_list.sh` scripts on the app servers.
+
+**Features**:
+- Interactive list type selection
+- Environment selection (dev, test, prod)
+- Runs across all Howard applications for the chosen environment
+
+**Usage**:
+```bash
+$ sh ~/Sites/_hal/drupal/acquia/list.sh
+# Choose list type: users, webforms, newsfeeds, or magazinefeeds
+# Choose environment: dev, test, or prod
+```
+
 ### Legacy and Utility Scripts
 
 #### Initial spin-up of a multi-site site, and clone dev.coasdept
@@ -392,6 +418,16 @@ You will also be given the option to commit/push immediately. If git automation 
 - Be sure that you are on master branch, and it is up to date.
 - You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
 - `$ sh ~/Sites/_hal/drupal/acquia/update_howard_packages.sh`
+
+#### Update Drupal core on all Howard D8 sites, commit, and push to acquia
+
+Updates `drupal/core`, `drupal/core-recommended`, `drupal/core-composer-scaffold`, and `drupal/core-project-message` (with all dependencies) across every local Howard D8 application. You will also be given the option to commit/push immediately. If git automation is not chosen, a new git branch will be created and used locally: "drupal_core_update_TIMESTAMP".
+
+- Be sure that HAL is up to date.
+- Be sure that all desired local folders are set up in hal_config.txt.
+- Be sure that you are on master branch, and it is up to date.
+- You will need to keep a loose eye on the terminal to put in passwords/etc occasionally.
+- `$ sh ~/Sites/_hal/drupal/acquia/update_drupal_core.sh`
 
 #### Update config item on all sites
 

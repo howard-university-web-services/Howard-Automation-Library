@@ -34,11 +34,10 @@ done
 DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 
-composer clearcache
-
 for app in ${LOCAL_HOWARD_D8_FOLDERS[@]}; do
   echo "Running update in $app"
   cd $app
+  composer clearcache
   # Check to ensure we are master git branch, and things are up to date.
   . $DIR/partials/check_git_status.sh
 
