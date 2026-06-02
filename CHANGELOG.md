@@ -5,6 +5,27 @@ All notable changes to the Howard Automation Library (HAL) will be documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-06-02
+
+### Added
+
+- **NEW SCRIPT**: `node_search.sh` - Search for node titles and menu link titles across all Howard D8 apps and environments
+  - Prompts for a partial search term (case-insensitive)
+  - Prompts for environment (dev, test, prod)
+  - Passes `NODE_SEARCH` env var via SSH to remote `hal_node_search.sh` on each app server
+  - Only outputs results for sites with matches; suppresses bootstrap errors
+- **NEW REMOTE SCRIPT**: `hal_node_search.sh` (deployed to all 5 app `scripts/` dirs) - Server-side node and menu link title search
+  - Searches both `node_field_data` and `menu_link_content_data` tables
+  - Accepts search term via `NODE_SEARCH` environment variable
+  - Suppresses Drupal bootstrap errors to keep output clean
+- **NEW REMOTE SCRIPT**: `hal_webform_list.sh` (deployed to all 5 app `scripts/` dirs) - Lists all webforms per multisite with submission counts and embed pages
+  - Uses `drush php:eval` with Drupal entity API (not SQL) to retrieve webform data
+- **NEW REMOTE SCRIPT**: `hal_webform_email_list.sh` (deployed to all 5 app `scripts/` dirs) - Lists webform email handler settings (to, from, reply-to) per multisite
+
+### Improved
+
+- **IMPROVED**: `list.sh` - Added `webform_emails` list type option; lists all webform email handler configurations (to, from, reply-to) across all sites for an environment
+
 ## [2.2.0] - 2026-05-08
 
 ### Added

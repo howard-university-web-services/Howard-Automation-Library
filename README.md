@@ -27,8 +27,11 @@ $ sh ~/Sites/_hal/drupal/acquia/acquia_config_set.sh
 # Remove lingering module database references
 $ sh ~/Sites/_hal/drupal/acquia/remove_deprecated_modules.sh
 
-# List users, webforms, news feeds, or magazine feeds across sites
+# List users, webforms, webform email handlers, news feeds, or magazine feeds across sites
 $ sh ~/Sites/_hal/drupal/acquia/list.sh
+
+# Search for a node or menu link title across all apps/environments
+$ sh ~/Sites/_hal/drupal/acquia/node_search.sh
 
 # Deploy code to production environments
 $ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh
@@ -389,17 +392,40 @@ $ sh ~/Sites/_hal/drupal/acquia/remove_deprecated_modules.sh
 
 #### `list.sh` - Data Listing Across Sites
 
-**Purpose**: Retrieve and display lists of users, webforms, news feeds, or magazine feeds across all Howard D8 sites. Relies on remote `hal_*_list.sh` scripts on the app servers.
+**Purpose**: Retrieve and display lists of users, webforms, webform email handlers, news feeds, or magazine feeds across all Howard D8 sites. Relies on remote `hal_*_list.sh` scripts on the app servers.
 
 **Features**:
 - Interactive list type selection
 - Environment selection (dev, test, prod)
 - Runs across all Howard applications for the chosen environment
 
+**List types**:
+- `users` — All user accounts per site
+- `webforms` — All webforms with submission counts and embed pages
+- `webform_emails` — All webform email handler configurations (to, from, reply-to) — useful for auditing where form submissions are being sent
+- `newsfeeds` — News feed content
+- `magazinefeeds` — Magazine feed content
+
 **Usage**:
 ```bash
 $ sh ~/Sites/_hal/drupal/acquia/list.sh
-# Choose list type: users, webforms, newsfeeds, or magazinefeeds
+# Choose list type: users, webforms, webform_emails, newsfeeds, or magazinefeeds
+# Choose environment: dev, test, or prod
+```
+
+#### `node_search.sh` - Search Node and Menu Link Titles
+
+**Purpose**: Search for a node title or menu link title (partial match) across all Howard D8 apps and environments. Useful for locating where specific content lives across the multisite ecosystem.
+
+**Features**:
+- Case-insensitive partial match against both `node_field_data` and `menu_link_content_data`
+- Only outputs sites with matches (clean output)
+- Suppresses Drupal bootstrap errors
+
+**Usage**:
+```bash
+$ sh ~/Sites/_hal/drupal/acquia/node_search.sh
+# Enter search term (partial match)
 # Choose environment: dev, test, or prod
 ```
 
@@ -498,16 +524,26 @@ Runs `composer update "drupal/*" --with-all-dependencies` across every local How
 - The script tags master, pushes master and the tag, then switches the prod environment to the tag via acli.
 - `$ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh`
 
-#### List users, webforms, news feeds, and magazine feeds across sites.
+#### List users, webforms, webform email handlers, news feeds, and magazine feeds across sites.
 
-A single unified script for listing data across all Howard D8 sites. Prompts for the list type at runtime. Relies on the corresponding remote list scripts (`hal_user_list.sh`, `hal_webform_list.sh`, etc.) on the app servers.
+A single unified script for listing data across all Howard D8 sites. Prompts for the list type at runtime. Relies on the corresponding remote list scripts (`hal_user_list.sh`, `hal_webform_list.sh`, `hal_webform_email_list.sh`, etc.) on the app servers.
 
 - Be sure that HAL is up to date.
 - Be sure that all desired local drush aliases are set up in hal_config.txt.
 - Be sure all acquia drush aliases are up to date.
-- Choose the list type (users, webforms, newsfeeds, or magazinefeeds) when prompted.
+- Choose the list type (users, webforms, webform_emails, newsfeeds, or magazinefeeds) when prompted.
 - Choose dev, test, or prod; the script runs the selected list across all apps for that environment.
 - `$ sh ~/Sites/_hal/drupal/acquia/list.sh`
+
+#### Search for a node or menu link title across all apps
+
+Searches all multisites across all five Howard D8 apps for a node title or menu link title. Useful for tracking down where specific content lives in the ecosystem.
+
+- Be sure that HAL is up to date.
+- Be sure all acquia drush aliases are set up in hal_config.txt.
+- Enter a partial search term when prompted (case-insensitive).
+- Choose dev, test, or prod.
+- `$ sh ~/Sites/_hal/drupal/acquia/node_search.sh`
 
 ## User maintenance
 
