@@ -1,3 +1,29 @@
 /vendor/
 /acquia_cli
 hal_config.txt
+
+# Ignore paths that contain user-generated content.
+docroot/files
+docroot/sites/*/files
+docroot/sites/*/private
+docroot/sites/*/settings.local.php
+docroot/sites/*/services.yml
+#idfive component library ignore
+docroot/themes/*/idfive-component-library/fractal
+# macOS System files
+.DS_Store
+# Ignore phpstorm files
+.idea
+#Ignore SQL files
+*.sql
+*.sql.gz
+#Ignore Visual Studio History files
+.lh/*
+.history/*
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

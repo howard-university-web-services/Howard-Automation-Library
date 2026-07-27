@@ -30,6 +30,9 @@ $ sh ~/Sites/_hal/drupal/acquia/remove_deprecated_modules.sh
 # List users, webforms, webform email handlers, news feeds, or magazine feeds across sites
 $ sh ~/Sites/_hal/drupal/acquia/list.sh
 
+# Check HTTP status of all sites (prod, stg, dev) for selected apps/environments
+$ sh ~/Sites/_hal/drupal/acquia/site_status_check.sh
+
 # Search for a node or menu link title across all apps/environments
 $ sh ~/Sites/_hal/drupal/acquia/node_search.sh
 
@@ -226,6 +229,7 @@ Each Howard application has three environments:
 - `acquia_config_set.sh` — Configuration value updates via drush config:set
 - `remove_deprecated_modules.sh` — Module database cleanup
 - `list.sh` — Data listing across sites
+- `site_status_check.sh` — HTTP status check for all sites across environments
 - `acquia_code_deploy.sh` — Code deployment to prod via acli
 
 **Local** (operates on your local machine — modifies files and git branches via composer):
@@ -412,6 +416,32 @@ $ sh ~/Sites/_hal/drupal/acquia/list.sh
 # Choose list type: users, webforms, webform_emails, newsfeeds, or magazinefeeds
 # Choose environment: dev, test, or prod
 ```
+
+#### `site_status_check.sh` - HTTP Site Status Check
+
+**Purpose**: Check the HTTP response status of every site (based on `docroot/sites/*.howard.edu` folders) for the selected applications and environments. Useful for quickly identifying sites that are down, returning errors, or have SSL/routing issues.
+
+**Features**:
+- All four targeting options available
+- Reads actual site folders (not just sites.php entries)
+- Maps environments to URL prefixes: `dev` → `dev.*`, `test` → `stg.*`, `prod` → bare domain
+- Passes HTTP basic auth (`huweb/huweb`) automatically
+- Skips SSL certificate verification on dev/test (expired certs are common)
+- Follows redirects — 2xx/3xx = UP (green ✓), all others = flagged (red ✗)
+- Prints a flagged URL summary at the end
+
+**Usage**:
+```bash
+$ sh ~/Sites/_hal/drupal/acquia/site_status_check.sh
+# Choose targeting scope (1-4)
+# Select application(s) and environment(s)
+# Script checks all site URLs and reports status
+```
+
+**Examples**:
+- Check all hud8 prod sites: Choose option 2, @hud8, then prod only
+- Full status sweep: Choose option 4 (All Applications + All Environments)
+- Check a single app across all envs: Choose option 2, select app
 
 #### `node_search.sh` - Search Node and Menu Link Titles
 
