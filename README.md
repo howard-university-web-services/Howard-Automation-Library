@@ -15,6 +15,47 @@ All scripts feature a consistent, user-friendly interface with flexible targetin
 
 ## Quick Reference
 
+### Monthly Update Steps
+
+1. **Sync prod databases to dev** — copies every multisite database from prod → dev on Acquia. Requests are queued asynchronously (~2–5 min per app), so fire this first and let it run in the background while you complete the next steps:
+   `$ sh ~/Sites/_hal/drupal/acquia/sync_prod_to_env.sh all databases`
+
+2. **Backup all prod databases** — creates a snapshot of every prod database before any code or schema changes land. Runs async; verify completion in Acquia Cloud UI if needed. Optionally also run against stg to capture any in-progress work on ongoing stg sites:
+   `$ sh ~/Sites/_hal/drupal/acquia/backup_databases.sh all prod`
+   `$ sh ~/Sites/_hal/drupal/acquia/backup_databases.sh all stg` *(optional)*
+
+3. **Pull latest code for all local apps** — ensures your local repos are on the latest master before running composer updates:
+   `$ sh ~/Sites/_hal/drupal/acquia/pull_all.sh`
+
+4. **Update all core, contrib, and Howard packages** — runs composer update for Drupal core, all contrib modules/themes, and all Howard packages across every local app. When prompted, say **YES** to commit and push to master. This pushes the updated composer.json/lock to git and Acquia automatically deploys it to dev:
+   `$ sh ~/Sites/_hal/drupal/acquia/update_all.sh`
+
+5. **Run database updates + cache rebuild on dev** — by now the DB copies from step 1 should be complete. `updb` applies any pending schema/data updates introduced by the new code; `cr` clears all caches so Drupal picks up the updated configuration and code:
+   `$ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh all dev updb`
+   `$ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh all dev cr`
+
+6. **QC — Status check on dev** — performs an HTTP health check against every dev site URL across all apps. Review the output carefully. **Any errors (5xx, 000, maintenance mode, Drupal error pages) must be investigated and resolved before proceeding.** Do not move to stg until all issues are accounted for:
+   `$ sh ~/Sites/_hal/drupal/acquia/site_status_check.sh all dev`
+
+7. **Run database updates + cache rebuild on stg** — stg does not have 1:1 prod databases (it may have in-progress work from clients), but running updb/cr here ensures stg code is in sync with any schema changes introduced by the update:
+   `$ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh all stg updb`
+   `$ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh all stg cr`
+
+8. **QC — Status check on stg** — same health check as step 6 but against stg URLs. Stg sites may legitimately be in maintenance mode or have in-progress work, so use judgment. **Any unexpected errors or Drupal fatal errors must be resolved before deploying to prod:**
+   `$ sh ~/Sites/_hal/drupal/acquia/site_status_check.sh all stg`
+
+9. **Deploy to prod** — creates a date-based git tag on master and switches every prod environment to that tag via acli. Only run this when both dev and stg QC have passed:
+   `$ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh all`
+
+10. **Run database updates + cache rebuild on prod** — same as step 5 but targeting prod. Applies any pending schema updates and clears caches so live traffic is served by the new code immediately:
+    `$ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh all prod updb`
+    `$ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh all prod cr`
+
+11. **QC — Status check on prod** — final health check against all live prod URLs. **Every error must be investigated and resolved before closing the ticket.** A 5xx, connection failure, or Drupal error page on prod is a live site outage:
+    `$ sh ~/Sites/_hal/drupal/acquia/site_status_check.sh all prod`
+
+12. **Post status report** — paste the prod status check output (or a summary) into the ticket, along with other notes and mark complete.
+
 ### Most Common Commands
 
 ```bash
@@ -33,11 +74,20 @@ $ sh ~/Sites/_hal/drupal/acquia/list.sh
 # Check HTTP status of all sites (prod, stg, dev) for selected apps/environments
 $ sh ~/Sites/_hal/drupal/acquia/site_status_check.sh
 
+# Sync prod databases and/or files to dev for selected apps (DESTRUCTIVE)
+$ sh ~/Sites/_hal/drupal/acquia/sync_prod_to_env.sh
+
+# Backup all databases for selected apps/environment
+$ sh ~/Sites/_hal/drupal/acquia/backup_databases.sh
+
 # Search for a node or menu link title across all apps/environments
 $ sh ~/Sites/_hal/drupal/acquia/node_search.sh
 
 # Deploy code to production environments
 $ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh
+
+# Pull latest code for all local Howard D8 applications
+$ sh ~/Sites/_hal/drupal/acquia/pull_all.sh
 
 # Full update (core + contrib + Howard packages) across all local Howard D8 applications
 $ sh ~/Sites/_hal/drupal/acquia/update_all.sh
@@ -54,7 +104,9 @@ $ sh ~/Sites/_hal/drupal/acquia/update_howard_packages.sh
 
 ### Targeting Options (Available in drush-based scripts)
 
-The drush-based scripts (`update_via_drush.sh`, `acquia_config_set.sh`, `remove_deprecated_modules.sh`, `list.sh`, `acquia_code_deploy.sh`) use an interactive targeting system:
+Most scripts support optional CLI arguments to skip interactive prompts entirely — useful for pasting commands directly. See each script's doc section for accepted args.
+
+The following scripts use an interactive targeting system when run without args (`update_via_drush.sh`, `acquia_config_set.sh`, `remove_deprecated_modules.sh`, `list.sh`, `acquia_code_deploy.sh`, `site_status_check.sh`, `sync_prod_to_env.sh`, `backup_databases.sh`):
 
 1. **Single App + Single Env** → Precise targeting (e.g., @hud8 dev only)
 2. **Single App + All Envs** → App-wide (e.g., @hud8 across dev/test/prod)  
@@ -230,9 +282,12 @@ Each Howard application has three environments:
 - `remove_deprecated_modules.sh` — Module database cleanup
 - `list.sh` — Data listing across sites
 - `site_status_check.sh` — HTTP status check for all sites across environments
+- `sync_prod_to_env.sh` — Sync prod databases and/or files to dev (destructive)
+- `backup_databases.sh` — Create backups of all databases for selected apps/env
 - `acquia_code_deploy.sh` — Code deployment to prod via acli
 
 **Local** (operates on your local machine — modifies files and git branches via composer):
+- `pull_all.sh` — Pull latest code for all local app folders
 - `update_all.sh` — Full update: core + contrib + Howard packages
 - `update_drupal_core.sh` — Drupal core updates
 - `update_drupal_contrib.sh` — Drupal contrib module and theme updates
@@ -311,17 +366,23 @@ Each script includes:
 
 **Usage**:
 ```bash
+# Interactive mode:
 $ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh
 # Choose targeting scope (1-4)
 # Select application(s) and environment(s)
 # Enter drush command (e.g., "cr" for cache rebuild)
 # Confirm execution
+
+# CLI mode — skip all prompts:
+$ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh [app] [env] [command]
+$ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh all dev cr
+$ sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh hud8 prod "pm:enable page_cache"
 ```
 
 **Examples**:
-- Cache rebuild on single site: Choose option 1, @hud8, dev, command: `cr`
-- Enable module system-wide: Choose option 4, command: `pm:enable page_cache`
-- Update database on one app: Choose option 2, @academicdepartments, command: `updb`
+- Cache rebuild on single site: `sh update_via_drush.sh hud8 dev cr`
+- Enable module system-wide: `sh update_via_drush.sh all prod "pm:enable page_cache"`
+- Update database on one app: `sh update_via_drush.sh academicdepartments dev updb`
 
 #### `acquia_config_set.sh` - Precise Configuration Updates
 
@@ -364,10 +425,16 @@ $ sh ~/Sites/_hal/drupal/acquia/acquia_config_set.sh
 
 **Usage**:
 ```bash
+# Interactive mode:
 $ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh
 # Choose: Single Application or All Applications
 # If single: select which app
 # Script tags, pushes, and deploys each repo to prod
+
+# CLI mode — skip all prompts:
+$ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh [app]
+$ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh all
+$ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh hud8
 ```
 
 **Process** (per application):
@@ -419,29 +486,165 @@ $ sh ~/Sites/_hal/drupal/acquia/list.sh
 
 #### `site_status_check.sh` - HTTP Site Status Check
 
-**Purpose**: Check the HTTP response status of every site (based on `docroot/sites/*.howard.edu` folders) for the selected applications and environments. Useful for quickly identifying sites that are down, returning errors, or have SSL/routing issues.
+**Purpose**: Perform a comprehensive HTTP health check against every Howard multisite URL for the selected applications and environments. Site discovery is driven by the presence of local `docroot/sites/*.howard.edu` folders, so results always reflect what is actually deployed rather than what is listed in `sites.php`.
+
+**Scope**: Remote — all checks hit live Acquia URLs. No local file changes are made.
 
 **Features**:
 - All four targeting options available
-- Reads actual site folders (not just sites.php entries)
-- Maps environments to URL prefixes: `dev` → `dev.*`, `test` → `stg.*`, `prod` → bare domain
-- Passes HTTP basic auth (`huweb/huweb`) automatically
-- Skips SSL certificate verification on dev/test (expired certs are common)
-- Follows redirects — 2xx/3xx = UP (green ✓), all others = flagged (red ✗)
-- Prints a flagged URL summary at the end
+- Discovers sites from local `docroot/sites/*.howard.edu` folders (not from `sites.php`)
+- Environment → URL prefix mapping: `dev` → `dev.*`, `test` → `stg.*`, `prod` → bare domain
+- HTTP Basic Auth (`huweb:huweb`) passed automatically on every request
+- SSL certificate verification skipped for dev/test (Acquia dev/stg certs are commonly expired/self-signed)
+- Follows redirects — 2xx/3xx = UP (green ✓), all others flagged (red ✗)
+- Per-homepage checks: HTTP status code, response time, page `<title>`, Shield status, maintenance mode, Drupal error page
+- Optional nav page sampling: up to 3 level-1 + 3 level-2 internal pages checked per site/env
+- Dual end-of-run summary: content warnings list + flagged URL list
+
+**Shield Status Expectations**:
+
+Shield is a Drupal HTTP Basic Auth module used to gate non-production environments from public access. The script evaluates Shield state differently by environment:
+
+| Environment | Expected State | Actual: Shield UP | Actual: Shield DOWN |
+|-------------|---------------|-------------------|---------------------|
+| `dev` / `test` | UP (401 no-auth) | ✓ green | ⚠ warning — publicly accessible |
+| `prod` | DOWN (public) | ⚠ warning — may be accidentally gated | ✓ green |
+
+Detection method: a HEAD request is made *without* credentials before each main GET. A `401` response indicates Shield is active; any other code means Shield is inactive.
+
+**Nav Page Sampling** (optional, prompted at runtime):
+
+When enabled, after each successful homepage check the script:
+
+1. Parses all `href` attributes from the already-fetched homepage body
+2. Filters to internal relative paths, excluding Drupal system paths (`/admin`, `/user`, `/node/`, `/sites/`, `/modules/`, `/themes/`, `/core/`) and static asset extensions (`.pdf`, `.jpg`, `.css`, `.js`, etc.)
+3. Groups remaining paths by URL depth:
+   - **Level 1**: `/segment` — top-level nav items (e.g. `/about`, `/academics`)
+   - **Level 2**: `/segment/segment` — sub-nav / dropdown items (e.g. `/about/leadership`)
+4. Randomly selects up to 3 paths from each group using a Fisher-Yates shuffle seeded with `$RANDOM`
+5. Checks each selected URL for: HTTP status, response time, page title, maintenance mode, and Drupal errors (Shield is not re-checked per-page)
+
+> **Performance note**: nav sampling adds up to 6 additional curl requests per site per environment. For a full sweep (All Apps + All Envs) across 100+ sites this significantly increases runtime. Scope to a single app or prod-only when using nav sampling for the first time.
+
+**Output Format**:
+
+```
+=== admission.howard.edu ===
+  ✓ [200] https://admission.howard.edu (0.84s)
+    ↳ Title: Undergraduate Admissions | Howard University
+    ↳ Shield: DOWN
+    ↳ Nav sample (level 1):
+      ✓ [200] https://admission.howard.edu/apply (0.71s)
+        Title: Apply Now | Howard University
+      ✓ [200] https://admission.howard.edu/visit (0.66s)
+        Title: Visit Campus | Howard University
+    ↳ Nav sample (level 2):
+      ✓ [200] https://admission.howard.edu/tuition/scholarships (0.79s)
+        Title: Scholarships | Howard University
+      ⚠ MAINTENANCE MODE
+```
+
+**Status Code Reference**:
+- `000` — Connection failure, DNS error, or request timeout (server unreachable)
+- `401` — Authenticated request rejected (Shield credential mismatch)
+- `4xx` — Client error (404 Not Found, 403 Forbidden, etc.)
+- `5xx` — Server error (Drupal crash, PHP fatal error, or database issue)
 
 **Usage**:
 ```bash
+# Interactive mode:
 $ sh ~/Sites/_hal/drupal/acquia/site_status_check.sh
-# Choose targeting scope (1-4)
-# Select application(s) and environment(s)
-# Script checks all site URLs and reports status
+# 1. Choose targeting scope (1-4)
+# 2. Select application(s) and/or environment(s) as prompted
+# 3. Answer the nav sampling prompt [y/N]
+# Script runs all checks inline, then prints a warnings + flagged URL summary
+
+# CLI mode — skip all prompts:
+$ sh ~/Sites/_hal/drupal/acquia/site_status_check.sh [app] [env] [nav]
+$ sh ~/Sites/_hal/drupal/acquia/site_status_check.sh all prod
+$ sh ~/Sites/_hal/drupal/acquia/site_status_check.sh hud8 prod y
 ```
 
 **Examples**:
-- Check all hud8 prod sites: Choose option 2, @hud8, then prod only
-- Full status sweep: Choose option 4 (All Applications + All Environments)
-- Check a single app across all envs: Choose option 2, select app
+- Quick prod check for one app: `sh site_status_check.sh hud8 prod`
+- Verify Shield everywhere: `sh site_status_check.sh all prod` — watch for Shield UP warnings
+- Full health sweep (slow): `sh site_status_check.sh all all`
+
+#### `sync_prod_to_env.sh` - Prod → Dev Data Sync
+
+**Purpose**: Copy all databases and/or files from Acquia prod to dev for selected applications. Databases are copied individually per DB using `acli api:environments:database-copy`, ensuring all multisite databases are synced. Files use `acli env:mirror --no-databases`.
+
+**Scope**: Remote — operates on Acquia environments via acli. No local file changes.
+
+> ⚠️ **DESTRUCTIVE**: All dev databases (and optionally files) are fully overwritten with production data. Requires typing `yes` (not just `y`) to confirm. Test/stg is intentionally excluded as a destination.
+
+**Features**:
+- Single Application or All Applications scope
+- Destination is always `dev` (stg excluded by design)
+- Choice of what to sync: Databases + Files, Databases only, or Files only
+- Copies **all** databases for an app (e.g. all 4 multisite DBs for uxws), not just the primary one
+- Database copies are queued asynchronously — allow 2–5 minutes per app before running follow-up commands
+- Dev codebase is never touched; Acquia platform config (crons, env vars) is never overwritten
+- Per-application error tracking with a pass/fail summary
+- Post-run reminder to run `updb` and `cr` via `update_via_drush.sh`
+
+**Requires**: `acli` installed and authenticated (`acli auth:login`), and `ACQUIA_ENV_UUID_*_prod` entries populated in `hal_config.txt`.
+
+**Usage**:
+```bash
+# Interactive mode:
+$ sh ~/Sites/_hal/drupal/acquia/sync_prod_to_env.sh
+# 1. Choose: Single Application or All Applications
+# 2. Choose what to sync: Databases + Files / Databases only / Files only
+# 3. Review the confirmation summary
+# 4. Type 'yes' to proceed
+
+# CLI mode — skip selection prompts (confirmation still required):
+$ sh ~/Sites/_hal/drupal/acquia/sync_prod_to_env.sh [app] [type]
+$ sh ~/Sites/_hal/drupal/acquia/sync_prod_to_env.sh all databases
+$ sh ~/Sites/_hal/drupal/acquia/sync_prod_to_env.sh hud8 both
+```
+
+**Examples**:
+- Refresh a single app's dev data: `sh sync_prod_to_env.sh hud8 databases`
+- Full prod → dev refresh for all apps: `sh sync_prod_to_env.sh all both`
+
+**Recommended follow-up** (via `update_via_drush.sh`):
+- `updb` — run pending database updates on dev
+- `cr` — rebuild caches on dev
+
+#### `backup_databases.sh` - Database Backups
+
+**Purpose**: Create Acquia database backups for all databases in the selected applications and environment. Recommended to run against prod at the start of every update cycle, before deploying code.
+
+**Scope**: Remote — queues backup jobs on Acquia via acli. No local file changes.
+
+**Features**:
+- Single Application or All Applications scope
+- Any environment: dev, test, or prod
+- Backs up **all** databases for an app (not just the primary one)
+- Backup requests are queued asynchronously — verify completion in the Acquia Cloud UI
+- Per-application error tracking with a pass/fail summary
+
+**Usage**:
+```bash
+# Interactive mode:
+$ sh ~/Sites/_hal/drupal/acquia/backup_databases.sh
+# 1. Choose: Single Application or All Applications
+# 2. Choose environment: dev, test, or prod
+# 3. Confirm — type y to proceed
+
+# CLI mode — skip selection prompts (confirmation still required):
+$ sh ~/Sites/_hal/drupal/acquia/backup_databases.sh [app] [env]
+$ sh ~/Sites/_hal/drupal/acquia/backup_databases.sh all prod
+$ sh ~/Sites/_hal/drupal/acquia/backup_databases.sh hud8 prod
+```
+
+**Examples**:
+- Back up all prod databases before an update cycle: `sh backup_databases.sh all prod`
+- Back up a single app before targeted changes: `sh backup_databases.sh hud8 prod`
+
+**Verify backups**: Acquia Cloud UI → your app → Databases → Backups
 
 #### `node_search.sh` - Search Node and Menu Link Titles
 

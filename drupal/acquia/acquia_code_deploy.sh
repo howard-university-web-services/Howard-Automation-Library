@@ -25,28 +25,57 @@ echo "Code deployment to Acquia PROD for Howard D8 sites."
 # Check acli is installed and in PATH
 if ! command -v acli &> /dev/null; then
   echo "Error: acli is not installed or not in PATH."
-  echo "Install:      brew install acquia/acquia-cli/acli"
-  echo "Authenticate: acli auth:login"
+  echo "  Install:      brew install acquia/acquia-cli/acli"
+  echo "  Authenticate: acli auth:login"
   exit 2
 fi
 
-# Choose scope
-echo "Deploy to:"
-SCOPES=( "Single Application" "All Applications" )
-select SCOPE in "${SCOPES[@]}"; do
-  if [[ -z "$SCOPE" ]]; then
-    printf '"%s" is not a valid choice\n' "$REPLY" >&2
-  else
-    break
-  fi
-done
+# ============================================================
+# Optional CLI arguments (skip interactive prompts)
+# Usage: sh acquia_code_deploy.sh [app]
+#   app: all | hud8 | academicdepartments | howardenterprise | centers | uxws
+# Examples:
+#   sh acquia_code_deploy.sh all
+#   sh acquia_code_deploy.sh hud8
+# ============================================================
 
-if [[ "$SCOPE" == "Single Application" ]]; then
-  select_app_only
-  TARGET_APPS=("$SELECTED_APP")
-else
-  echo "Selected: All Applications"
-  TARGET_APPS=("${LOCAL_HOWARD_D8_DRUSH_ALIAS[@]}")
+TARGET_APPS=()
+
+if [[ -n "$1" ]]; then
+  _arg="$(echo "$1" | tr '[:upper:]' '[:lower:]')"
+  _arg="${_arg#@}"
+  if [[ "$_arg" == "all" ]]; then
+    SCOPE="All Applications"
+    TARGET_APPS=("${LOCAL_HOWARD_D8_DRUSH_ALIAS[@]}")
+    echo "App(s): All Applications"
+  else
+    SCOPE="Single Application"
+    SELECTED_APP="@${_arg}"
+    TARGET_APPS=("$SELECTED_APP")
+    echo "App:    $SELECTED_APP"
+  fi
+  echo ""
+fi
+
+# Choose scope
+if [[ -z "$SCOPE" ]]; then
+  echo "Deploy to:"
+  SCOPES=( "Single Application" "All Applications" )
+  select SCOPE in "${SCOPES[@]}"; do
+    if [[ -z "$SCOPE" ]]; then
+      printf '"%s" is not a valid choice\n' "$REPLY" >&2
+    else
+      break
+    fi
+  done
+
+  if [[ "$SCOPE" == "Single Application" ]]; then
+    select_app_only
+    TARGET_APPS=("$SELECTED_APP")
+  else
+    echo "Selected: All Applications"
+    TARGET_APPS=("${LOCAL_HOWARD_D8_DRUSH_ALIAS[@]}")
+  fi
 fi
 
 # Deploy function: tag, push, and acli deploy for one app

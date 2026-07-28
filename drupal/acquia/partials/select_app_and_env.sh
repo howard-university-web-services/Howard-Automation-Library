@@ -40,6 +40,10 @@ select_app_and_env() {
 }
 
 select_app_only() {
+    if [[ -n "$SELECTED_APP" ]]; then
+        echo "Using application: $SELECTED_APP"
+        return 0
+    fi
     echo "Select a Howard Application (@hud8, @academicdepartments, etc.):"
     AVAILABLE_APPS=( "${LOCAL_HOWARD_D8_DRUSH_ALIAS[@]}" )
     select SELECTED_APP in "${AVAILABLE_APPS[@]}"; do
@@ -53,6 +57,10 @@ select_app_only() {
 }
 
 select_env_only() {
+    if [[ -n "$SELECTED_ENV" ]]; then
+        echo "Using environment: $SELECTED_ENV"
+        return 0
+    fi
     echo "Select an Environment (dev, test, prod):"
     AVAILABLE_ENVS=( "dev" "test" "prod" )
     select SELECTED_ENV in "${AVAILABLE_ENVS[@]}"; do
