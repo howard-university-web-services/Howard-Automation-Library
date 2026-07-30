@@ -83,6 +83,9 @@ $ sh ~/Sites/_hal/drupal/acquia/backup_databases.sh
 # Search for a node or menu link title across all apps/environments
 $ sh ~/Sites/_hal/drupal/acquia/node_search.sh
 
+# Pull current config from any Acquia environment to local codebases (clean mirror)
+$ sh ~/Sites/_hal/drupal/acquia/pull_config_from_env.sh
+
 # Deploy code to production environments
 $ sh ~/Sites/_hal/drupal/acquia/acquia_code_deploy.sh
 
@@ -295,6 +298,7 @@ Each Howard application has three environments:
 
 **Local + Remote** (creates local files, then connects to Acquia):
 - `create_new_multisite.sh` — New multisite scaffolding
+- `pull_config_from_env.sh` — Export config from any Acquia env and rsync to local codebases
 
 ## How this interacts with the acquia server
 
@@ -645,6 +649,47 @@ $ sh ~/Sites/_hal/drupal/acquia/backup_databases.sh hud8 prod
 - Back up a single app before targeted changes: `sh backup_databases.sh hud8 prod`
 
 **Verify backups**: Acquia Cloud UI → your app → Databases → Backups
+
+#### `pull_config_from_env.sh` - Pull Config from Acquia to Local
+
+**Purpose**: Export active Drupal configuration from any Acquia environment (dev/test/prod) to your local codebases. Runs `drush cex` on every site in the selected app(s), exports to a temp directory on the server, then rsyncs the result back to the matching local `config/` directory. Uses `--delete` so each pull is a clean mirror of the remote state.
+
+**Scope**: Local + Remote — modifies local config files. No changes are made to Acquia environments.
+
+**Features**:
+- All four targeting options available (single app, all apps, any env)
+- Discovers live `AH_SITE_NAME` dynamically — works correctly for non-standard paths (uxws, centers)
+- Exports via direct SSH (not drush ssh) to handle multiline bash safely on read-only Acquia filesystems
+- Temp exports to `/tmp/hal_config_export_{app}/` (writable), cleaned up after sync
+- `--delete` rsync — stale local `.yml` files not present in the remote export are removed; `.htaccess` and `README.txt` are protected
+- Per-app error tracking with a pass/fail summary
+- Review changes with `git diff config/` before committing
+
+**Usage**:
+```bash
+# Interactive mode:
+$ sh ~/Sites/_hal/drupal/acquia/pull_config_from_env.sh
+# Choose targeting scope (1-4)
+# Select application(s) and environment(s)
+# Confirm execution
+
+# CLI mode — skip all prompts:
+$ sh ~/Sites/_hal/drupal/acquia/pull_config_from_env.sh [app] [env]
+$ sh ~/Sites/_hal/drupal/acquia/pull_config_from_env.sh all prod
+$ sh ~/Sites/_hal/drupal/acquia/pull_config_from_env.sh hud8 stg
+```
+
+**Examples**:
+- Sync all apps from prod: `sh pull_config_from_env.sh all prod`
+- Sync a single app from stg: `sh pull_config_from_env.sh hud8 stg`
+- Sync uxws from dev: `sh pull_config_from_env.sh uxws dev`
+
+**Recommended follow-up**:
+- `git diff config/` — review what changed before committing
+- `git add config/ && git commit -m 'Sync config from prod'` — commit the updated config
+- `drush config:import --partial -y` — import config into a local site if needed
+
+> ⚠️ **Note**: Sites that fail `drush cex` (e.g. cms-training.howard.edu when the DB can't be bootstrapped) are skipped. Check the error summary at the end of the run and investigate those sites separately.
 
 #### `node_search.sh` - Search Node and Menu Link Titles
 
