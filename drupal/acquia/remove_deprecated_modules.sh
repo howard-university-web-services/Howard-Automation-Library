@@ -6,7 +6,7 @@
 # Scope: Remote — connects to Acquia environments via drush
 #
 # Notes:
-# - See README.md for detailed instructions.
+# - Docs: ~/Sites/_hal/docs/scripts/remove_deprecated_modules.md
 # - Removes key_value system.schema entries and config table entries for the given module(s)
 # - Flexible targeting options for precise cleanup
 #

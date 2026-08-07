@@ -27,3 +27,11 @@ docroot/themes/*/idfive-component-library/fractal
 *.swp
 *.swo
 *~
+
+# Playwright regression tests — generated/runtime files
+playwright/node_modules/
+playwright/snapshots/
+playwright/screenshots/
+playwright/test-results/
+playwright/playwright-report/
+playwright/sites.json

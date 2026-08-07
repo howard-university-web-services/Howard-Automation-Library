@@ -13,6 +13,9 @@
 # USAGE
 #   sh ~/Sites/_hal/drupal/acquia/site_status_check.sh
 #
+# DOCS
+#   ~/Sites/_hal/docs/scripts/site_status_check.md
+#
 # SCOPE
 #   Remote — all curl requests hit live Acquia URLs. No local file changes.
 #

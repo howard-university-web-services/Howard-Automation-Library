@@ -7,6 +7,7 @@
 # Scope: Remote — operates on Acquia environments via acli. No local changes.
 #
 # Notes:
+# - Docs: ~/Sites/_hal/docs/scripts/backup_databases.md
 # - Backs up ALL databases for ALL sites in the selected app(s)/env.
 # - Backup requests are queued asynchronously on Acquia — allow a few
 #   minutes, then verify in the Acquia Cloud UI.

@@ -7,6 +7,7 @@
 # Scope: Remote — operates on Acquia environments via acli. No local changes.
 #
 # Notes:
+# - Docs: ~/Sites/_hal/docs/scripts/sync_prod_to_env.md
 # - Databases are copied individually per DB using `acli api:environments:database-copy`
 #   so that ALL multisite databases are synced (not just the primary one).
 #   e.g. uxws has 4 databases — all four are copied.

@@ -6,6 +6,7 @@
 # Scope: Remote — connects to Acquia environments via drush
 #
 # Notes:
+# - Docs: ~/Sites/_hal/docs/scripts/node_search.md
 # - Searches node_field_data.title with a LIKE %term% query on all multisites.
 # - Only returns sites that have matching results.
 #

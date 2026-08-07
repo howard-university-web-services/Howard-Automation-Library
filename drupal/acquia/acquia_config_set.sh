@@ -6,7 +6,7 @@
 # Scope: Remote — connects to Acquia environments via drush
 #
 # Notes:
-# - See README.md for detailed instructions.
+# - Docs: ~/Sites/_hal/docs/scripts/acquia_config_set.md
 # - See https://drushcommands.com/drush-8x/config/config-set/
 # - Precise application and environment targeting
 #

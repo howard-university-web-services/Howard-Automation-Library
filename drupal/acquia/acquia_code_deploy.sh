@@ -6,7 +6,7 @@
 # Scope: Remote — deploys to Acquia prod environments via acli
 #
 # Notes:
-# - See README.md for detailed instructions.
+# - Docs: ~/Sites/_hal/docs/scripts/acquia_code_deploy.md
 # - Always deploys to prod. Other environments stay on master.
 #
 # Dependencies:

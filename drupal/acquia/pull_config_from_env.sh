@@ -6,6 +6,7 @@
 # Scope: Remote → Local
 #
 # Notes:
+# - Docs: ~/Sites/_hal/docs/scripts/pull_config_from_env.md
 # - Runs `drush cex` on every site in the selected app(s)/env, exporting DB
 #   config to the server's sync directories.
 # - Rsyncs those config directories from Acquia back to the local codebase(s).

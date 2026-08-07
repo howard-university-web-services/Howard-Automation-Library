@@ -6,6 +6,7 @@
 # Scope: Local — runs git pull in each folder defined in hal_config.txt
 #
 # Notes:
+# - Docs: ~/Sites/_hal/docs/scripts/update_all.md
 # - Expects each folder to be on master branch and up to date.
 # - If a folder has uncommitted changes or is on a non-master branch,
 #   git pull may fail or produce unexpected results for that repo.

@@ -6,7 +6,7 @@
 # Scope: Remote — connects to Acquia environments via drush
 #
 # Notes:
-# - See README.md for detailed instructions.
+# - Docs: ~/Sites/_hal/docs/scripts/list.md
 # - Interacts with remote /scripts/hal_*_list.sh scripts on the app servers.
 #
 # Dependencies:

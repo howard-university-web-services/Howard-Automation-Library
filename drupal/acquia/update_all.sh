@@ -7,7 +7,7 @@
 # Scope: Local — modifies local files and git branches via composer
 #
 # Notes:
-# - See README.md for detailed instructions.
+# - Docs: ~/Sites/_hal/docs/scripts/update_all.md
 # - Runs in order per site:
 #   1. composer update drupal/core drupal/core-recommended drupal/core-composer-scaffold drupal/core-project-message --with-all-dependencies
 #   2. composer update "drupal/*" --with-all-dependencies

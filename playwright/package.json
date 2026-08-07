@@ -1,0 +1,13 @@
+{
+  "name": "hal-regression-tests",
+  "version": "1.0.0",
+  "description": "Playwright visual regression tests for Howard University Drupal multisites",
+  "scripts": {
+    "test": "npx playwright test",
+    "baseline": "npx playwright test --update-snapshots",
+    "report": "npx playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.45.0"
+  }
+}

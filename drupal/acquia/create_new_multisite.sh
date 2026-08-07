@@ -7,7 +7,7 @@
 # Scope: Local + Remote — creates local files and git branches, then connects to Acquia
 #
 # Notes:
-# - See README.md for detailed instructions.
+# - Docs: ~/Sites/_hal/docs/scripts/create_new_multisite.md
 #
 # Dependencies:
 # - Drush: https://www.drush.org/
