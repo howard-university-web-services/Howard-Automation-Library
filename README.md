@@ -302,12 +302,3 @@ The following is a quick guide to disabling uses across all howard ecosystems, i
 - Run `sh ~/Sites/_hal/drupal/acquia/update_via_drush.sh`, choose environments, and enter drush command when prompted: `user:cancel first.last`.
 
 This will block the user account and reassign all content to the anonymous user.
-
-## Roadmap
-
-### All Howard D8 acquia codebases
-
-- Run composer add on all local codebases. "add the seckit module on all local D8 codebases" **In Progress**
-- Commit and push to DEV for all local codebases
-- Deploy to prod for all codebases
-- You may choose either hud8 or academicdepartments Prod Environment.
