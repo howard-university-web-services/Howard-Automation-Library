@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # This script creates a new multisite install locally, adjusts settings.php and sites.php with needed parameters,
-# create a new multisite DB on acquia, clone the stg.coasdept.howard.edu DB and Files into it.
+# create a new multisite DB on acquia, clone the prod sitebuilding.howard.edu DB and files from uxws into it.
 #
 # $ sh ~/Sites/_hal/drupal/acquia/create_new_multisite.sh
 # Scope: Local + Remote — creates local files and git branches, then connects to Acquia
@@ -18,8 +18,8 @@
 # - Site Name | 'example.howard.edu' | 'school.howard.edu'
 # - Database Name | 'example' | The machine name of the DB added to acquia
 # - Push Git | Defines whether to commit and push code
-# - Copy DB | Defines whether to copy stg.coasdept DB
-# - Copy Files | Defines whether to copy stg.coasdept files
+# - Copy DB | Defines whether to copy the uxws prod sitebuilding DB
+# - Copy Files | Defines whether to copy the uxws prod sitebuilding files
 #
 
 echo "This script will create the local sites folder, commit and push to acquia."
@@ -80,7 +80,7 @@ select PUSH_GIT in "${YES_NO[@]}"; do
 done
 
 # See if user wishes to automatically copy database.
-echo "Do you wish to automatically copy the stg.coasdept DB to this new site?"
+echo "Do you wish to automatically copy the uxws prod sitebuilding.howard.edu DB to this new site?"
 select COPY_DB in "${YES_NO[@]}"; do
   if [[ -z "$COPY_DB" ]]; then
     printf '"%s" is not a valid choice\n' "$REPLY" >&2
@@ -90,7 +90,7 @@ select COPY_DB in "${YES_NO[@]}"; do
 done
 
 # See if user wishes to automatically copy files.
-echo "Do you wish to automatically copy the stg.coasdept files to this new site?"
+echo "Do you wish to automatically copy the uxws prod sitebuilding.howard.edu files to this new site?"
 select COPY_FILES in "${YES_NO[@]}"; do
   if [[ -z "$COPY_FILES" ]]; then
     printf '"%s" is not a valid choice\n' "$REPLY" >&2
@@ -165,10 +165,10 @@ fi
 if [[ $COPY_DB = "YES" ]]
 then
   echo "cloning database..."
-  ${LOCAL_DRUSH} -Dssh.tty=0 ${LOCAL_HOWARD_D8_DRUSH_ALIAS[0]}.test --uri=stg.coasdept.howard.edu sql:dump > hal_coasdept_dump.sql
+  ${LOCAL_DRUSH} -Dssh.tty=0 ${LOCAL_HOWARD_D8_DRUSH_ALIAS[4]}.prod --uri=sitebuilding.howard.edu sql:dump > hal_sitebuilding_dump.sql
   ${LOCAL_DRUSH} $ACQUIA_ENV --uri=stg.$SITE_NAME sql:drop
-  ${LOCAL_DRUSH} $ACQUIA_ENV --uri=stg.$SITE_NAME sql:cli < hal_coasdept_dump.sql
-  rm hal_coasdept_dump.sql
+  ${LOCAL_DRUSH} $ACQUIA_ENV --uri=stg.$SITE_NAME sql:cli < hal_sitebuilding_dump.sql
+  rm hal_sitebuilding_dump.sql
 else
   echo "Copy Database skipped. All database configuration must be manually done."
 fi
@@ -179,19 +179,19 @@ then
   echo "copying files..."
   if [ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[0]}.test" ]
   then
-    scp -3 -r hud8.test@hud8stg.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/coasdept.howard.edu/files hud8.test@hud8stg.ssh.prod.acquia-sites.com:/mnt/files/hud8.test/sites/$SITE_NAME
+    scp -3 -r uxws.prod@uxwsprod.ssh.prod.acquia-sites.com:/mnt/files/uxws.prod/sites/sitebuilding.howard.edu/files hud8.test@hud8stg.ssh.prod.acquia-sites.com:/mnt/files/hud8.test/sites/$SITE_NAME
   elif [ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[1]}.test" ]
   then
-    scp -3 -r hud8.test@hud8stg.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/coasdept.howard.edu/files academicdepartments.test@academicdepartmentsstg.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/$SITE_NAME
+    scp -3 -r uxws.prod@uxwsprod.ssh.prod.acquia-sites.com:/mnt/files/uxws.prod/sites/sitebuilding.howard.edu/files academicdepartments.test@academicdepartmentsstg.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/$SITE_NAME
   elif [ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[2]}.test" ]
   then
-    scp -3 -r hud8.test@hud8stg.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/coasdept.howard.edu/files howardenterprise.test@howardenterprisestg.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/$SITE_NAME
+    scp -3 -r uxws.prod@uxwsprod.ssh.prod.acquia-sites.com:/mnt/files/uxws.prod/sites/sitebuilding.howard.edu/files howardenterprise.test@howardenterprisestg.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/$SITE_NAME
   elif [ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[3]}.test" ]
   then
-    scp -3 -r hud8.test@hud8stg.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/coasdept.howard.edu/files centers.test@centerstest.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/$SITE_NAME
+    scp -3 -r uxws.prod@uxwsprod.ssh.prod.acquia-sites.com:/mnt/files/uxws.prod/sites/sitebuilding.howard.edu/files centers.test@centerstest.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/$SITE_NAME
   elif [ $ACQUIA_ENV = "${LOCAL_HOWARD_D8_DRUSH_ALIAS[4]}.test" ]
   then
-    scp -3 -r hud8.test@hud8stg.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/coasdept.howard.edu/files uxws.stage@uxwsstage.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/$SITE_NAME
+    scp -3 -r uxws.prod@uxwsprod.ssh.prod.acquia-sites.com:/mnt/files/uxws.prod/sites/sitebuilding.howard.edu/files uxws.stage@uxwsstage.ssh.prod.acquia-sites.com:/home/clouduser/test/sites/$SITE_NAME
   fi
 else
   echo "Copy files skipped. New site will not have starter images/etc."

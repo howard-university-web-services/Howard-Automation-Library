@@ -19,7 +19,7 @@ Both steps must be completed before running the script, as it depends on both th
 - Adjusts `settings.php` and `sites.php` with the required parameters
 - Adds connection data to the multisite database on Acquia
 - Optionally commits to master and pushes to Acquia
-- Optionally clones an existing site's database and files into the new site on Acquia stg
+- Optionally clones the uxws prod `sitebuilding.howard.edu` database and files into the new site on Acquia stg
 
 ## Usage
 
