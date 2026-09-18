@@ -5,6 +5,12 @@ All notable changes to the Howard Automation Library (HAL) will be documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.1] - 2026-09-18
+
+### Fixed
+
+- **BUGFIX**: `update_all.sh`, `update_drupal_core.sh`, `update_drupal_contrib.sh`, `update_howard_packages.sh` - `$DIR` (used to source `partials/check_git_status.sh`) was computed as a relative path, which broke after the app loop's `cd "$app"` on every iteration past the first. Now resolved to an absolute path (`DIR="$(cd "$DIR" && pwd)"`) before the loop starts, so these scripts work correctly regardless of relative vs. absolute invocation.
+
 ## [2.3.0] - 2026-06-02
 
 ### Added

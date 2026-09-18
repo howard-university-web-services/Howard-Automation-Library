@@ -34,6 +34,10 @@ done
 
 DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
+# Resolve to an absolute path - the loop below cd's into each app folder,
+# which would otherwise break this relative reference after the first
+# iteration.
+DIR="$(cd "$DIR" && pwd)"
 
 for app in ${LOCAL_HOWARD_D8_FOLDERS[@]}; do
   echo "Running update in $app"
